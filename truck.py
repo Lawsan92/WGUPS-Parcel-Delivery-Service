@@ -1,4 +1,5 @@
 import datetime
+import csv
 
 class Truck:
 
@@ -8,22 +9,15 @@ class Truck:
     travel_time = 0
     speed = 18
 
-    def __init__(self, id):
-        self.id = id
+    def __init__(self, truck_id):
+        self.id = truck_id
 
-    def get_id (self):
+    def get_id(self):
         return self.id
 
     def print_info(self):
-        print(f' truck id: {self.id}')
+        for package in self.packages:
+            print(package)
 
-        print('number of packages: ', len(self.packages))
-
-        for package in self.packages :
-            print('package: ', package)
-
-    def update_mileage(self):
-        self.mileage = self.mileage + 10
-
-    def add_packages(self, packages):
+    def load_truck(self, packages):
         self.packages = packages
