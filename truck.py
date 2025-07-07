@@ -21,3 +21,11 @@ class Truck:
 
     def load_truck(self, packages):
         self.packages = packages
+
+    def drop_package(self):
+        self.packages.pop(0)
+        for package in self.packages:
+            print(package)
+
+    def check_time(self):
+        return self.current_time
