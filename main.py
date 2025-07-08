@@ -3,6 +3,7 @@ import truck
 import package
 import packages
 import csv
+import distance_hash
 
 
 # Declare trucks
@@ -29,7 +30,7 @@ truck_2.load_truck(file_reader.populate_trucks(truck_2.get_id()))
 # file_reader.sort_priority()
 
 # file_reader.create_hash()
-
+#
 # distance_hash = distance_hash.DistanceHash()
 # distance_hash.create_hash()
 # distance_hash.print_hash()
@@ -49,6 +50,12 @@ with open('WGUPS Package File_edited.csv') as package_file_csv:
         truck_package = package.Package(row[0], row[1], row[2], row[4], row[5], row[6], row[7], 0)
         # add package to packages hash table
         packages.insert_package(truck_package)
+        
 
 # print packages
-print(packages.find_package(1))
+packages.print()
+print('find package with id 16:', packages.find_package(16))
+
+
+# deliver packages
+

@@ -3,8 +3,6 @@ class Packages:
     def __init__(self):
         self.packages = {}
         self.size = 0
-        self.next = None
-        self.capacity = 16
 
     def print(self):
         for index, package in self.packages.items():
@@ -20,16 +18,13 @@ class Packages:
         key = package.delivery_id
         index = self._hash(package.delivery_id)
 
-        if index in self.packages:
-            current = self.packages[index]
-            if current.next:
-                while current.next:
-                    current = current.next
-                current.next = package
-            else:
-                current.next = package
-        else:
-            self.packages[index] = package
+        if index not in self.packages: # if a bucket doesn't exist for a package with this key
+            self.packages[index] = package # create a bucket and add that package to it
+        else: # otherwise
+            current = self.packages[index] # start at the beginning of the list in the bucket
+            while current.next: # before reaching the end of the list
+                current = current.next # keep going down the list
+            current.next = package # append the package after reaching the end of the list
 
         self.size = self.size + 1
 
@@ -38,15 +33,17 @@ class Packages:
         index = self._hash(key)
         if index in self.packages:
             current = self.packages[index]
-            if int(current.delivery_id) == key:
-                return current
-            else:
-                while current.next:
-                    if int(current.delivery_id) == key:
-                        return current
-                    else:
-                        current = current.next
-        return None
+            while current:
+                if int(current.delivery_id) == key:
+                    return {
+                        'delivery_address': current.delivery_address,
+                        'delivery_city': current.delivery_city,
+                        'delivery_zip': current.delivery_zip,
+                        'delivery_deadline:': current.delivery_deadline,
+                        'weight': current.delivery_weight,
+                        'status': current.delivery_status}
+                current = current.next
+        return 'package not found'
 
 
 
