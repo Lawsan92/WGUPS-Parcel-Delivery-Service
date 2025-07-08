@@ -10,6 +10,7 @@ class Packages:
             while package:
                 print(f"package.next: {package.next}")
                 package = package.next
+        print(f"size: {self.size}")
 
     def _hash(self, key):
         return int(key) % 10
@@ -18,13 +19,13 @@ class Packages:
         key = package.delivery_id
         index = self._hash(package.delivery_id)
 
-        if index not in self.packages: # if a bucket doesn't exist for a package with this key
-            self.packages[index] = package # create a bucket and add that package to it
-        else: # otherwise
-            current = self.packages[index] # start at the beginning of the list in the bucket
-            while current.next: # before reaching the end of the list
-                current = current.next # keep going down the list
-            current.next = package # append the package after reaching the end of the list
+        if index not in self.packages:
+            self.packages[index] = package
+        else:
+            current = self.packages[index]
+            while current.next:
+                current = current.next
+            current.next = package
 
         self.size = self.size + 1
 
@@ -44,6 +45,14 @@ class Packages:
                         'status': current.delivery_status}
                 current = current.next
         return 'package not found'
+
+    def load_packages(self, truck):
+        for index, package in self.packages.items():
+            while package:
+                if package.delivery_status == 'at the hub':
+                    truck.load_truck(package)
+                package = package.next
+
 
 
 

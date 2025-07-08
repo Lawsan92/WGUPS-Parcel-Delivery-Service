@@ -72,9 +72,7 @@ def sort_priority():
         for row in read_package_csv :
             print(row)
 
-def populate_trucks(truck_id):
-    # initialize empty package array
-    packages = []
+def populate_trucks(truck):
     # read package .csv file
     with open( 'WGUPS Package File_edited.csv') as package_file_csv:
         read_package_csv = csv.reader(package_file_csv, delimiter=',')
@@ -90,66 +88,18 @@ def populate_trucks(truck_id):
                 'delivery_deadline': row[5],
                 'delivery_weight': row[6],
                 'special_notes': row[7],
-                'delivery_status': 0
+                'delivery_status': 'at the hub'
             }
             ### set flag for special conditions
-            if package['special_notes'] == 'Can only be on truck 2' and truck_id == 1:
+            if package['special_notes'] == 'Can only be on truck 2' and truck.id != 2:
                 continue
 
             ### set flag for truck 2
-            if truck_id == 2 and package['special_notes'] != 'Can only be on truck 2' :
+            if truck.id == 2 and package['special_notes'] != 'Can only be on truck 2' :
                 continue
 
             ## truck has reached full capacity
-            if len(packages) > 15:
+            if len(truck.packages) > truck.capacity:
                 break
 
-            packages.append(package)
-
-        return packages
-
-# def create_hash():
-#     hash = {}
-#     with open('WGUPS Distance Table_edited.csv', 'r', newline='') as distance_table_csv:
-#         read_distance_csv = csv.reader(distance_table_csv, delimiter=',')
-#
-#         #get file header
-#         header = next(read_distance_csv)
-#         clean_header = []
-#
-#         # clean up headers to use as keys
-#         for address in header:
-#             # print(address)
-#             cleaned_address = address.replace('\n', ' ').replace('(', ', ').strip(')')
-#             clean_header.append(cleaned_address)
-#         # print(clean_header)
-#
-#         i = 1
-#         # add buckets
-#         for row in read_distance_csv:
-#             # print(row)
-#             ## add bucket keys
-#             ### clean up bucket key names
-#             cleaned_row = row[0].replace('\n', '').replace('(', ', ').strip(')')
-#
-#             ### set bucket keys, with a default empty bucket
-#             if cleaned_row not in hash:
-#                 hash[cleaned_row] = {}
-#
-#             ## populate buckets
-#             n = len(row)
-#             for j in range(1, n):
-#                 # print(clean_header[j])
-#                 ### check if intercepting distance is in cell
-#                 # print(clean_header[j], row[j] == '')
-#                 if row[j] != '':
-#                     hash[cleaned_row][clean_header[j]] = row[j]
-#
-#             # hash[cleaned_row][clean_header[i]] = row[i]
-#             #print('hash[', i, ']: ', 'hash[',cleaned_row,'][',clean_header[i],']:', hash[cleaned_row][clean_header[i]])
-#             # print('i: ', i, 'row[i]: ', row[i])
-#
-#     # print('hash: ', hash)
-#     for key in hash:
-#         bucket = hash[key]
-#         print('key:', key, ': ', bucket)
+            truck.load_truck(package)
