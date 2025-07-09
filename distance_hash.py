@@ -4,6 +4,7 @@ from operator import index
 
 class DistanceHash:
     hash = {}
+    size = 0
 
     def create_hash(self):
         with open('WGUPS Distance Table_edited.csv', 'r', newline='') as distance_table_csv:
@@ -11,48 +12,23 @@ class DistanceHash:
 
             # get file header
             header = next(read_distance_csv)
-            clean_header = []
 
-            # clean up headers to use as keys
-            for address in header:
-                cleaned_address = address.replace('\n', ' ').replace('(', ', ').strip(')')
-                clean_header.append(cleaned_address)
-
-            # cleaned_header = clean_header.pop(0)
-            #
-            #
-            # for row in read_distance_csv:
-            #     row_header = row[0]
-            #     try:
-            #         row_header = row[0][0:row[0].index('(')].replace('\n', '')
-            #     except ValueError as e:
-            #         continue
-            #
-            #     for index in range(0, len(clean_header)):
-            #         if clean_header[index] == '':
-            #             continue
-            #         if clean_header[index].find(row_header) != -1:
-            #             clean_header[index] = row_header
-
-            # print('clean_header:', clean_header)
-
-            # add buckets
-            i = 1
+            header_index = 0
             for row in read_distance_csv:
-
-                ## add bucket keys + clean up bucket names
-                cleaned_row = row[0].replace('\n', '').replace('(', ', ').strip(')')
-
+                row_header = row[0]
                 try:
-                    cleaned_row.index(',')
-                    cleaned_row = cleaned_row[0:cleaned_row.index(',')]
-                except:
-                    continue
-                print('cleaned_row:', cleaned_row)
+                    row_header = row[0][0:row[0].index('(')].replace('\n', '')
+                except ValueError as e:
+                    print()
 
-                ### set bucket keys, with a default empty bucket
-                if cleaned_row not in self.hash:
-                    self.hash[cleaned_row] = {}
+                # replace column headers with row headers to get matching keys
+                header[header_index] = row_header
+                header_index += 1
+
+                ## set bucket keys, with a default empty bucket
+                if row_header not in self.hash:
+                    self.hash[row_header] = {}
+                    self.size += 1
 
                 ## populate buckets
                 n = len(row)
@@ -60,7 +36,8 @@ class DistanceHash:
 
                     ### check if intercepting distance is in cell
                     if row[j] != '':
-                        self.hash[cleaned_row][clean_header[j]] = row[j]
+                        self.hash[row_header][header[j-1]] = row[j]
+
 
     def __str__(self):
         return str(self.hash)
@@ -72,7 +49,6 @@ class DistanceHash:
 
     # nearest neighbor algorithm
     def nearest_address(self, address):
-        print('address:', address)
         next_stop = {}
         distance_list = list(self.hash[address].values())
         address_list = list(self.hash[address].keys())
@@ -91,6 +67,8 @@ class DistanceHash:
                 next_stop['address'] = current_stop
         return next_stop
 
+    def get_size(self):
+        return self.size
 
 
 

@@ -11,7 +11,7 @@ class Truck:
         self.mileage = 0.0
         self.current_time = datetime.datetime.now()
         self.inventory = 0
-        self.current_stop = 'Western Governors University 4001 South 700 East' or 'HUB'
+        self.current_stop = 'HUB'
 
     def __str__(self):
         return_string = ''
@@ -56,12 +56,11 @@ class Truck:
             # add mileage
             for distance in distance_hash.hash[address]:
                 if self.current_stop in distance:
-                    # print('distance: ', distance, 'distance_hash.hash[address][distance]: ', distance_hash.hash[address][distance])
+
                     current_distance = float(distance_hash.hash[address][distance])
                     self.update_mileage(current_distance)
 
                     # update current stop
-                    print(distance_hash.nearest_address(address))
                     self.current_stop = address
 
                     # update time

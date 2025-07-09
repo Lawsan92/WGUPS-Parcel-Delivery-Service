@@ -15,12 +15,14 @@ truck_3 = truck.Truck(3)
 # initialize distance table
 distances = distance_hash.DistanceHash()
 distances.create_hash()
-print('printing distances...')
-distances.print_hash()
+# print('printing distances...')
+# distances.print_hash()
+# print(distances.get_size())
 
 # # print nearest address
-# print('printing distances...')
-# distances.nearest_address('3148 S 1100 W')
+# print('nearest distance example...')
+# print('distances.nearest_address(\'3148 S 1100 W\'):', distances.nearest_address('3148 S 1100 W'))
+
 
 # Read package csv file
 with open('WGUPS Package File_edited.csv') as package_file_csv:
