@@ -1,5 +1,4 @@
 import datetime
-import csv
 import math
 
 class Truck:
@@ -72,6 +71,3 @@ class Truck:
 
     def update_time(self, delivery_time):
         self.current_time += datetime.timedelta(minutes=delivery_time)
-
-    def update_mileage(self, mileage):
-        self.mileage += mileage
