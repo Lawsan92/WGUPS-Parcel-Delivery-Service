@@ -37,21 +37,21 @@ class Truck:
     def update_mileage(self, mileage):
         self.mileage += mileage
 
-    def update_inventory(self):
+    def update_inventory(self, package):
+        # remove package from truck
+        self.packages.remove(package)
         self.inventory -= 1
 
     def drop_package(self, distance_hash):
 
         for package in self.packages:
             address = package.delivery_address
+
             # update package status
             package.delivery_status = 'delivered'
 
-            # remove package from truck
-            self.packages.remove(package)
-
             # update inventory
-            self.update_inventory()
+            self.update_inventory(package)
 
             # add mileage
             for distance in distance_hash.hash[address]:
@@ -60,14 +60,15 @@ class Truck:
                     current_distance = float(distance_hash.hash[address][distance])
                     self.update_mileage(current_distance)
 
-            # update current stop
-            self.current_stop = address
+                    # update current stop
+                    print(distance_hash.nearest_address(address))
+                    self.current_stop = address
 
-            # update time
-            self.update_time(math.ceil((current_distance / self.speed) * 60))
+                    # update time
+                    self.update_time(math.ceil((current_distance / self.speed) * 60))
 
-            #update mileage
-            self.update_mileage(current_distance)
+                    #update mileage
+                    self.update_mileage(current_distance)
 
     def update_time(self, delivery_time):
         self.current_time += datetime.timedelta(minutes=delivery_time)

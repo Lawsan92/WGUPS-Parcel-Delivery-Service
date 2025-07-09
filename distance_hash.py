@@ -1,4 +1,6 @@
 import csv
+from operator import index
+
 
 class DistanceHash:
     hash = {}
@@ -13,17 +15,32 @@ class DistanceHash:
 
             # clean up headers to use as keys
             for address in header:
-                # print(address)
                 cleaned_address = address.replace('\n', ' ').replace('(', ', ').strip(')')
                 clean_header.append(cleaned_address)
-            # print(clean_header)
 
-            i = 1
+            # cleaned_header = clean_header.pop(0)
+            #
+            #
+            # for row in read_distance_csv:
+            #     row_header = row[0]
+            #     try:
+            #         row_header = row[0][0:row[0].index('(')].replace('\n', '')
+            #     except ValueError as e:
+            #         continue
+            #
+            #     for index in range(0, len(clean_header)):
+            #         if clean_header[index] == '':
+            #             continue
+            #         if clean_header[index].find(row_header) != -1:
+            #             clean_header[index] = row_header
+
+            # print('clean_header:', clean_header)
+
             # add buckets
+            i = 1
             for row in read_distance_csv:
 
-                ## add bucket keys
-                ### clean up bucket key names
+                ## add bucket keys + clean up bucket names
                 cleaned_row = row[0].replace('\n', '').replace('(', ', ').strip(')')
 
                 try:
@@ -31,6 +48,7 @@ class DistanceHash:
                     cleaned_row = cleaned_row[0:cleaned_row.index(',')]
                 except:
                     continue
+                print('cleaned_row:', cleaned_row)
 
                 ### set bucket keys, with a default empty bucket
                 if cleaned_row not in self.hash:
@@ -52,7 +70,9 @@ class DistanceHash:
             bucket = self.hash[key]
             print('key:', key, ': ', bucket)
 
+    # nearest neighbor algorithm
     def nearest_address(self, address):
+        print('address:', address)
         next_stop = {}
         distance_list = list(self.hash[address].values())
         address_list = list(self.hash[address].keys())

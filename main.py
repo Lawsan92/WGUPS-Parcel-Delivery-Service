@@ -18,9 +18,9 @@ distances.create_hash()
 print('printing distances...')
 distances.print_hash()
 
-# print nearest address
-print('printing distances...')
-distances.nearest_address('3148 S 1100 W')
+# # print nearest address
+# print('printing distances...')
+# distances.nearest_address('3148 S 1100 W')
 
 # Read package csv file
 with open('WGUPS Package File_edited.csv') as package_file_csv:
@@ -54,7 +54,7 @@ packages.load_packages(truck_3)
 # print('printing truck 3...')
 # print(truck_3)
 
-# # deliver packages
-# truck_1.drop_package(distances)
-# print('\nprinting truck 1...')
-# print(truck_1)
+# deliver packages
+truck_1.drop_package(distances)
+print('\nprinting truck 1...')
+print(truck_1)
