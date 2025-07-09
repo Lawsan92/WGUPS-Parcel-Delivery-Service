@@ -42,33 +42,36 @@ class Truck:
         self.inventory -= 1
 
     def drop_package(self, distance_hash):
-        current_package = self.packages[0]
-        address = current_package.delivery_address
-        # print(f'drop package: {current_package}')
-        # print('hash: ', distance_hash.hash[address])
 
-        # update package status
-        self.packages[0].delivery_status = 'delivered'
+        for package in self.packages:
+            address = package.delivery_address
+            # update package status
+            package.delivery_status = 'delivered'
 
-        # remove package from truck
-        self.packages.pop(0)
+            # remove package from truck
+            self.packages.remove(package)
 
-        # update inventory
-        self.update_inventory()
+            # update inventory
+            self.update_inventory()
 
-        # add mileage
-        for distance in distance_hash.hash[address]:
-            if self.current_stop in distance:
-              # print('distance: ', distance, 'distance_hash.hash[address][distance]: ', distance_hash.hash[address][distance])
-              current_distance =  float(distance_hash.hash[address][distance])
-              self.update_mileage(current_distance)
+            # add mileage
+            for distance in distance_hash.hash[address]:
+                if self.current_stop in distance:
+                    # print('distance: ', distance, 'distance_hash.hash[address][distance]: ', distance_hash.hash[address][distance])
+                    current_distance = float(distance_hash.hash[address][distance])
+                    self.update_mileage(current_distance)
 
-        # update current stop
-        self.current_stop = address
+            # update current stop
+            self.current_stop = address
 
-        # update time
-        self.update_time(math.ceil((current_distance / self.speed) * 60))
+            # update time
+            self.update_time(math.ceil((current_distance / self.speed) * 60))
+
+            #update mileage
+            self.update_mileage(current_distance)
 
     def update_time(self, delivery_time):
         self.current_time += datetime.timedelta(minutes=delivery_time)
 
+    def update_mileage(self, mileage):
+        self.mileage += mileage

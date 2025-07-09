@@ -52,5 +52,5 @@ print(truck_1)
 
 # deliver packages
 truck_1.drop_package(distances)
-print('printing truck 1...')
+print('\nprinting truck 1...')
 print(truck_1)
