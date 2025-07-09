@@ -1,20 +1,24 @@
-import file_reader
 import truck
 import package
 import packages
 import csv
 import distance_hash
 
+# instantiate packages hash table
+packages = packages.Packages()
 
-# Declare trucks
+# initialize trucks
 truck_1 = truck.Truck(1)
 truck_2 = truck.Truck(2)
 truck_3 = truck.Truck(3)
 
-# instantiate packages hash table
-packages = packages.Packages()
+# initialize distance table
+distances = distance_hash.DistanceHash()
+distances.create_hash()
+# print('printing distances...')
+# distances.print_hash()
 
-# Read package manifest file
+# Read package csv file
 with open('WGUPS Package File_edited.csv') as package_file_csv:
     read_package_csv = csv.reader(package_file_csv, delimiter=',')
 
@@ -22,12 +26,16 @@ with open('WGUPS Package File_edited.csv') as package_file_csv:
     next(read_package_csv)
 
     for row in read_package_csv:
-        # set package fields
+        # initialize package
         truck_package = package.Package(row[0], row[1], row[2], row[4], row[5], row[6], row[7], 'at the hub')
-        # add package to packages hash table
+        # add package to package hash table
         packages.insert_package(truck_package)
 
-# load trucks
+# # check packages hash table
+# print('printing packages...')
+# print(packages)
+
+# load trucks with packages
 packages.load_packages(truck_1)
 packages.load_packages(truck_2)
 packages.load_packages(truck_3)
@@ -36,27 +44,13 @@ packages.load_packages(truck_3)
 print('printing truck 1...')
 print(truck_1)
 
-print('printing truck 2...')
-print(truck_2)
-
-print('printing truck 3...')
-print(truck_3)
-
-
-# print packages
-# packages.print()
-print('find package with id 16:', packages.find_package(16))
-
-
-
-#--------------------------------------------------------------------
-# deliver packages
-# sorting functions
-# file_reader.sort_delivery_destinations()
-# file_reader.sort_priority()
-
-# file_reader.create_hash()
+# print('printing truck 2...')
+# print(truck_2)
 #
-# distance_hash = distance_hash.DistanceHash()
-# distance_hash.create_hash()
-# distance_hash.print_hash()
+# print('printing truck 3...')
+# print(truck_3)
+
+# deliver packages
+truck_1.drop_package(distances)
+print('printing truck 1...')
+print(truck_1)

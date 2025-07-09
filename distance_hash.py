@@ -26,6 +26,12 @@ class DistanceHash:
                 ### clean up bucket key names
                 cleaned_row = row[0].replace('\n', '').replace('(', ', ').strip(')')
 
+                try:
+                    cleaned_row.index(',')
+                    cleaned_row = cleaned_row[0:cleaned_row.index(',')]
+                except:
+                    continue
+
                 ### set bucket keys, with a default empty bucket
                 if cleaned_row not in self.hash:
                     self.hash[cleaned_row] = {}
@@ -38,6 +44,8 @@ class DistanceHash:
                     if row[j] != '':
                         self.hash[cleaned_row][clean_header[j]] = row[j]
 
+    def __str__(self):
+        return str(self.hash)
 
     def print_hash(self):
         for key in self.hash:
