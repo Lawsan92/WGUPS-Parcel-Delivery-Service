@@ -15,8 +15,12 @@ truck_3 = truck.Truck(3)
 # initialize distance table
 distances = distance_hash.DistanceHash()
 distances.create_hash()
-# print('printing distances...')
-# distances.print_hash()
+print('printing distances...')
+distances.print_hash()
+
+# print nearest address
+print('printing distances...')
+distances.nearest_address('3148 S 1100 W')
 
 # Read package csv file
 with open('WGUPS Package File_edited.csv') as package_file_csv:
@@ -40,9 +44,9 @@ packages.load_packages(truck_1)
 packages.load_packages(truck_2)
 packages.load_packages(truck_3)
 
-# Check truck contents
-print('printing truck 1...')
-print(truck_1)
+# # Check truck contents
+# print('printing truck 1...')
+# print(truck_1)
 
 # print('printing truck 2...')
 # print(truck_2)
@@ -50,7 +54,7 @@ print(truck_1)
 # print('printing truck 3...')
 # print(truck_3)
 
-# deliver packages
-truck_1.drop_package(distances)
-print('\nprinting truck 1...')
-print(truck_1)
+# # deliver packages
+# truck_1.drop_package(distances)
+# print('\nprinting truck 1...')
+# print(truck_1)

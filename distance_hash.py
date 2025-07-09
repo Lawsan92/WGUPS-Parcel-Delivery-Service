@@ -51,3 +51,27 @@ class DistanceHash:
         for key in self.hash:
             bucket = self.hash[key]
             print('key:', key, ': ', bucket)
+
+    def nearest_address(self, address):
+        next_stop = {}
+        distance_list = list(self.hash[address].values())
+        address_list = list(self.hash[address].keys())
+        i = 0
+        for j in range(len(distance_list) - 1):
+            # don't compare the current stop's distance to itself
+            if address_list[0] == address:
+                i += 1
+                continue
+            next_stop['address'] = address_list[i]
+            next_stop['distance'] = float(distance_list[i])
+            current_distance = float(distance_list[j])
+            current_stop = address_list[j]
+            if current_distance < next_stop['distance']:
+                next_stop['distance'] = current_distance
+                next_stop['address'] = current_stop
+        return next_stop
+
+
+
+
+
