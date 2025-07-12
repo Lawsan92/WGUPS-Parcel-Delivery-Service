@@ -16,9 +16,9 @@ class Truck:
     def __str__(self):
         return_string = ''
         id_string = f'id: {self.id}'
-        packages_string =  'packages:['
+        packages_string =  'packages:[\n'
         for package in self.packages:
-            packages_string += f'{{id: {package.delivery_id}, address: {package.delivery_address} }},'
+            packages_string += f'{{id: {package.delivery_id}, address: {package.delivery_address} }}\n'
         packages_string += ']'
         load_string = f'load: {self.inventory}'
         location_string = f'location: {self.current_stop}'
@@ -44,9 +44,18 @@ class Truck:
 
     def drop_package(self, distance_hash):
 
-        for package in self.packages:
-            address = package.delivery_address
 
+        for package in self.packages:
+
+            # get current package delivery address
+            address = package.delivery_address
+            # print('current stop:', self.current_stop)
+            # # get distance mappings for current package
+            # bucket = distance_hash[address]
+            # for key, value in distance_hash[address].items():
+            #     print(f'{address} -> {{ {key}: {value} }}')
+            #
+            # print('----------------------------------------')
             # update package status
             package.delivery_status = 'delivered'
 
@@ -54,10 +63,10 @@ class Truck:
             self.update_inventory(package)
 
             # add mileage
-            for distance in distance_hash.hash[address]:
+            for distance in distance_hash[address]:
                 if self.current_stop in distance:
 
-                    current_distance = float(distance_hash.hash[address][distance])
+                    current_distance = float(distance_hash[address][distance])
                     self.update_mileage(current_distance)
 
                     # update current stop

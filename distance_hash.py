@@ -38,14 +38,19 @@ class DistanceHash:
                     if row[j] != '':
                         self.hash[row_header][header[j-1]] = row[j]
 
-
     def __str__(self):
-        return str(self.hash)
+        return_string = ''
+        for key, value in self.hash.items():
+            return_string += f'{key} -> {value}\n'
+        return_string += f'size: {self.size}'
+        return return_string
 
-    def print_hash(self):
-        for key in self.hash:
-            bucket = self.hash[key]
-            print('key:', key, ': ', bucket)
+    def fill_hash(self):
+        # this method fills out the tables - even if there is redundant data
+        for outer_key, outer_bucket in self.hash.items():
+            for inner_key, inner_bucket in self.hash.items():
+                if outer_key in inner_bucket and inner_key not in outer_bucket:
+                    outer_bucket[inner_key] = inner_bucket[outer_key]
 
     # nearest neighbor algorithm
     def nearest_address(self, address):
@@ -66,10 +71,3 @@ class DistanceHash:
                 next_stop['distance'] = current_distance
                 next_stop['address'] = current_stop
         return next_stop
-
-    def get_size(self):
-        return self.size
-
-
-
-

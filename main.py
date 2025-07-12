@@ -15,9 +15,8 @@ truck_3 = truck.Truck(3)
 # initialize distance table
 distances = distance_hash.DistanceHash()
 distances.create_hash()
-# print('printing distances...')
-# distances.print_hash()
-# print(distances.get_size())
+distances.fill_hash()
+print(distances)
 
 # # print nearest address
 # print('nearest distance example...')
@@ -47,7 +46,7 @@ packages.load_packages(truck_2)
 packages.load_packages(truck_3)
 
 # # Check truck contents
-# print('printing truck 1...')
+# print('printing truck 1 BEFORE...')
 # print(truck_1)
 
 # print('printing truck 2...')
@@ -57,6 +56,6 @@ packages.load_packages(truck_3)
 # print(truck_3)
 
 # deliver packages
-truck_1.drop_package(distances)
-print('\nprinting truck 1...')
-print(truck_1)
+truck_1.drop_package(distances.hash)
+# print('\nprinting truck 1 AFTER...')
+# print(truck_1)
