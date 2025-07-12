@@ -19,7 +19,7 @@ class DistanceHash:
                 try:
                     row_header = row[0][0:row[0].index('(')].replace('\n', '')
                 except ValueError as e:
-                    print()
+                    row_header = row_header.replace(' ', '')
 
                 # replace column headers with row headers to get matching keys
                 header[header_index] = row_header

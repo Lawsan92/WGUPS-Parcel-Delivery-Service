@@ -12,6 +12,7 @@ class Truck:
         self.current_time = datetime.datetime.now()
         self.inventory = 0
         self.current_stop = 'HUB'
+        self.previous_stop = None
 
     def __str__(self):
         return_string = ''
@@ -44,39 +45,82 @@ class Truck:
 
     def drop_package(self, distance_hash):
 
+        #EDGECASE: if we're at the hub
+        if self.current_stop == 'HUB':
+            # look through the packages and find which one has the nearest address then set the next address
+            nearest_package = {
+                'address': self.packages[0].delivery_address,
+                'distance': float(distance_hash[self.packages[0].delivery_address][self.current_stop])
+            }
 
-        for package in self.packages:
+            for i in range(1, len(self.packages) - 1):
+                current_package = self.packages[i].delivery_address
+                current_distance = float(distance_hash[current_package][self.current_stop])
+                if nearest_package['distance'] > current_distance > 0:
+                    nearest_package['address'] = current_package
+                    nearest_package['distance'] = current_distance
 
-            # get current package delivery address
-            address = package.delivery_address
-            # print('current stop:', self.current_stop)
-            # # get distance mappings for current package
-            # bucket = distance_hash[address]
-            # for key, value in distance_hash[address].items():
-            #     print(f'{address} -> {{ {key}: {value} }}')
-            #
-            # print('----------------------------------------')
-            # update package status
-            package.delivery_status = 'delivered'
+            self.current_stop = nearest_package['address']
+            self.previous_stop = 'HUB'
+            self.drop_package(distance_hash)
 
-            # update inventory
-            self.update_inventory(package)
+        for i in range(1, len(self.packages) - 1):
+            current_package = self.packages[i]
+            # drop off package at current stop
+            if current_package.delivery_address == self.current_stop:
+                # mark package as delivered
+                current_package.delivery_status = 'delivered'
+                # add mileage
+                current_distance = float(distance_hash[current_package.delivery_address][self.previous_stop])
+                self.update_mileage(current_distance)
+                # update inventory
+                self.update_inventory(current_package)
+                print('current stop', self.current_stop, 'previous stop', self.previous_stop, 'current distance', current_distance)
+        # plan next stop
 
-            # add mileage
-            for distance in distance_hash[address]:
-                if self.current_stop in distance:
 
-                    current_distance = float(distance_hash[address][distance])
-                    self.update_mileage(current_distance)
 
-                    # update current stop
-                    self.current_stop = address
-
-                    # update time
-                    self.update_time(math.ceil((current_distance / self.speed) * 60))
-
-                    #update mileage
-                    self.update_mileage(current_distance)
+        # for package in self.packages:
+        #
+        #     # get current package delivery address
+        #     current_address = package.delivery_address
+        #
+        #     # update package status
+        #     package.delivery_status = 'delivered'
+        #
+        #     # update inventory
+        #     self.update_inventory(package)
+        #
+        #     # add mileage
+        #     for distance in distance_hash[current_address]:
+        #         if self.current_stop in distance:
+        #
+        #             current_distance = float(distance_hash[current_address][distance])
+        #             self.update_mileage(current_distance)
+        #
+        #             # update current stop
+        #             self.current_stop = current_address
+        #
+        #             # update time
+        #             self.update_time(math.ceil((current_distance / self.speed) * 60))
+        #
+        #             #update mileage
+        #             self.update_mileage(current_distance)
 
     def update_time(self, delivery_time):
         self.current_time += datetime.timedelta(minutes=delivery_time)
+
+    def nearest_neighbor(self, distance_hash):
+
+        nearest_package = {
+            'address': self.packages[0].delivery_address,
+            'distance': float(distance_hash[self.packages[0].delivery_address][self.current_stop])
+        }
+
+        for i in range(1, len(self.packages) - 1):
+            current_package = self.packages[i].delivery_address
+            current_distance = float(distance_hash[current_package][self.current_stop])
+            if nearest_package['distance'] > current_distance > 0:
+                nearest_package['address'] = current_package
+                nearest_package['distance'] = current_distance
+        return nearest_package
