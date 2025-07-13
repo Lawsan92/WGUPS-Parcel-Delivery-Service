@@ -43,28 +43,35 @@ class Truck:
         self.packages.remove(package)
         self.inventory -= 1
 
+    def update_time(self, delivery_time):
+        self.current_time += datetime.timedelta(minutes=delivery_time)
+
     def drop_package(self, distance_hash):
 
         #EDGECASE: if we're at the hub
         if self.current_stop == 'HUB':
-            # look through the packages and find which one has the nearest address then set the next address
+            # default case: assume the package at the beginning of the list has the nearest address
             nearest_package = {
                 'address': self.packages[0].delivery_address,
                 'distance': float(distance_hash[self.packages[0].delivery_address][self.current_stop])
             }
-
-            for i in range(1, len(self.packages) - 1):
+            # look through the packages and find which one has the nearest address from the current stop
+            for i in range(1, len(self.packages)):
                 current_package = self.packages[i].delivery_address
                 current_distance = float(distance_hash[current_package][self.current_stop])
+                # compare the driving distance of the first package's address with the rest of the packages
                 if nearest_package['distance'] > current_distance > 0:
                     nearest_package['address'] = current_package
                     nearest_package['distance'] = current_distance
 
+            #once we've selected the package with the nearest address: update our next stop
             self.current_stop = nearest_package['address']
             self.previous_stop = 'HUB'
             self.drop_package(distance_hash)
 
-        for i in range(1, len(self.packages) - 1):
+        # if we're en route
+
+        for i in range(0, len(self.packages)):
             current_package = self.packages[i]
             # drop off package at current stop
             if current_package.delivery_address == self.current_stop:
@@ -75,40 +82,35 @@ class Truck:
                 self.update_mileage(current_distance)
                 # update inventory
                 self.update_inventory(current_package)
-                print('current stop', self.current_stop, 'previous stop', self.previous_stop, 'current distance', current_distance)
-        # plan next stop
+                # update time
+                self.update_time(math.ceil((current_distance / self.speed) * 60))
+                # print('current stop', self.current_stop, 'previous stop', self.previous_stop, 'current distance',
+                #       current_distance)
+                break
+        # BASE CASE: if we're at our last top
+        if self.inventory == 0:
+            return
 
+        #deterine the next stop
+        nearest_package = {
+            'address': self.packages[0].delivery_address,
+            'distance': float(distance_hash[self.packages[0].delivery_address][self.current_stop])
+            }
 
+        for i in range(1, len(self.packages)):
+            current_package = self.packages[i].delivery_address
+            current_distance = float(distance_hash[current_package][self.current_stop])
+            if nearest_package['distance'] > current_distance > 0:
+                nearest_package['address'] = current_package
+                nearest_package['distance'] = current_distance
 
-        # for package in self.packages:
-        #
-        #     # get current package delivery address
-        #     current_address = package.delivery_address
-        #
-        #     # update package status
-        #     package.delivery_status = 'delivered'
-        #
-        #     # update inventory
-        #     self.update_inventory(package)
-        #
-        #     # add mileage
-        #     for distance in distance_hash[current_address]:
-        #         if self.current_stop in distance:
-        #
-        #             current_distance = float(distance_hash[current_address][distance])
-        #             self.update_mileage(current_distance)
-        #
-        #             # update current stop
-        #             self.current_stop = current_address
-        #
-        #             # update time
-        #             self.update_time(math.ceil((current_distance / self.speed) * 60))
-        #
-        #             #update mileage
-        #             self.update_mileage(current_distance)
+        temp = self.current_stop
+        self.current_stop = nearest_package['address']
+        self.previous_stop = temp
 
-    def update_time(self, delivery_time):
-        self.current_time += datetime.timedelta(minutes=delivery_time)
+        while self.inventory > 1:
+            self.drop_package(distance_hash)
+
 
     def nearest_neighbor(self, distance_hash):
 
@@ -124,3 +126,16 @@ class Truck:
                 nearest_package['address'] = current_package
                 nearest_package['distance'] = current_distance
         return nearest_package
+
+    '''
+    def deliver():
+    
+        drop off the package
+            mark the package as delivered
+        if the package is delivered
+            update the package inventory
+            update the time
+            update the mileage
+            plan next route
+    
+    '''

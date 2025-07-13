@@ -3,10 +3,12 @@ from operator import index
 
 
 class DistanceHash:
-    hash = {}
-    size = 0
 
     def create_hash(self):
+
+        self.hash = {}
+        self.size = 0
+
         with open('WGUPS Distance Table_edited.csv', 'r', newline='') as distance_table_csv:
             read_distance_csv = csv.reader(distance_table_csv, delimiter=',')
 

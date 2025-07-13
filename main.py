@@ -47,7 +47,7 @@ packages.load_packages(truck_3)
 
 # Check truck contents
 print('printing truck 1 BEFORE...')
-# print(truck_1)
+print(truck_1)
 
 # print('printing truck 2...')
 # print(truck_2)
