@@ -9,7 +9,7 @@ class Truck:
         self.id = truck_id
         self.packages = []
         self.mileage = 0.0
-        self.current_time = datetime.datetime.now()
+        self.current_time = datetime.datetime(2025,7,13, 8)
         self.inventory = 0
         self.current_stop = 'HUB'
         self.previous_stop = None
@@ -19,7 +19,7 @@ class Truck:
         id_string = f'id: {self.id}'
         packages_string =  'packages:[\n'
         for package in self.packages:
-            packages_string += f'{{id: {package.delivery_id}, address: {package.delivery_address} }}\n'
+            packages_string += f'{{id: {package.delivery_id}, address: {package.delivery_address}, notes: {package.delivery_notes } }}\n'
         packages_string += ']'
         load_string = f'load: {self.inventory}'
         location_string = f'location: {self.current_stop}'
@@ -46,31 +46,19 @@ class Truck:
     def update_time(self, delivery_time):
         self.current_time += datetime.timedelta(minutes=delivery_time)
 
-    def drop_package(self, distance_hash):
+    def deliver_package(self, distance_hash):
 
         #EDGECASE: if we're at the hub
         if self.current_stop == 'HUB':
             # default case: assume the package at the beginning of the list has the nearest address
-            nearest_package = {
-                'address': self.packages[0].delivery_address,
-                'distance': float(distance_hash[self.packages[0].delivery_address][self.current_stop])
-            }
-            # look through the packages and find which one has the nearest address from the current stop
-            for i in range(1, len(self.packages)):
-                current_package = self.packages[i].delivery_address
-                current_distance = float(distance_hash[current_package][self.current_stop])
-                # compare the driving distance of the first package's address with the rest of the packages
-                if nearest_package['distance'] > current_distance > 0:
-                    nearest_package['address'] = current_package
-                    nearest_package['distance'] = current_distance
+            nearest_package = self.nearest_neighbor(distance_hash)
 
             #once we've selected the package with the nearest address: update our next stop
             self.current_stop = nearest_package['address']
             self.previous_stop = 'HUB'
-            self.drop_package(distance_hash)
+            self.deliver_package(distance_hash)
 
         # if we're en route
-
         for i in range(0, len(self.packages)):
             current_package = self.packages[i]
             # drop off package at current stop
@@ -87,11 +75,24 @@ class Truck:
                 # print('current stop', self.current_stop, 'previous stop', self.previous_stop, 'current distance',
                 #       current_distance)
                 break
+
         # BASE CASE: if we're at our last top
         if self.inventory == 0:
             return
 
         #deterine the next stop
+        nearest_package = self.nearest_neighbor(distance_hash)
+
+        temp = self.current_stop
+        self.current_stop = nearest_package['address']
+        self.previous_stop = temp
+
+        while self.inventory > 1:
+            self.deliver_package(distance_hash)
+
+
+    def nearest_neighbor(self, distance_hash):
+
         nearest_package = {
             'address': self.packages[0].delivery_address,
             'distance': float(distance_hash[self.packages[0].delivery_address][self.current_stop])
@@ -104,28 +105,16 @@ class Truck:
                 nearest_package['address'] = current_package
                 nearest_package['distance'] = current_distance
 
-        temp = self.current_stop
-        self.current_stop = nearest_package['address']
-        self.previous_stop = temp
-
-        while self.inventory > 1:
-            self.drop_package(distance_hash)
-
-
-    def nearest_neighbor(self, distance_hash):
-
-        nearest_package = {
-            'address': self.packages[0].delivery_address,
-            'distance': float(distance_hash[self.packages[0].delivery_address][self.current_stop])
-        }
-
-        for i in range(1, len(self.packages) - 1):
-            current_package = self.packages[i].delivery_address
-            current_distance = float(distance_hash[current_package][self.current_stop])
-            if nearest_package['distance'] > current_distance > 0:
-                nearest_package['address'] = current_package
-                nearest_package['distance'] = current_distance
         return nearest_package
+
+    def check_notes(self,package):
+
+        print('Checking truck notes...')
+
+    def late_package(self):
+
+        print('Checking truck late...')
+
 
     '''
     def deliver():

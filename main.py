@@ -18,11 +18,6 @@ distances.create_hash()
 distances.fill_hash()
 # print(distances)
 
-# # print nearest address
-# print('nearest distance example...')
-# print('distances.nearest_address(\'3148 S 1100 W\'):', distances.nearest_address('3148 S 1100 W'))
-
-
 # Read package csv file
 with open('WGUPS Package File_edited.csv') as package_file_csv:
     read_package_csv = csv.reader(package_file_csv, delimiter=',')
@@ -36,9 +31,7 @@ with open('WGUPS Package File_edited.csv') as package_file_csv:
         # add package to package hash table
         packages.insert_package(truck_package)
 
-# # check packages hash table
-# print('printing packages...')
-# print(packages)
+print(packages)
 
 # load trucks with packages
 packages.load_packages(truck_1)
@@ -46,16 +39,32 @@ packages.load_packages(truck_2)
 packages.load_packages(truck_3)
 
 # Check truck contents
-print('printing truck 1 BEFORE...')
+print('printing truck 1 AT HUB...')
 print(truck_1)
+print('----------–----------–----------–----------–----------–')
 
-# print('printing truck 2...')
-# print(truck_2)
-#
-# print('printing truck 3...')
-# print(truck_3)
+print('truck 2 AT HUB...')
+print(truck_2)
+print('----------–----------–----------–----------–----------–')
+
+print('printing truck 3 AT HUB...')
+print(truck_3)
+print('----------–----------–----------–----------–----------–')
 
 # deliver packages
-truck_1.drop_package(distances.hash)
-print('\nprinting truck 1 AFTER...')
+truck_1.deliver_package(distances.hash)
+truck_2.deliver_package(distances.hash)
+truck_3.deliver_package(distances.hash)
+
+# print truck contents after completing delveries
+print('printing truck 1 PACKAGES DELIVERED...')
 print(truck_1)
+print('----------–----------–----------–----------–----------–')
+
+print('printing truck 1 PACKAGES DELIVERED...')
+print(truck_2)
+
+print('printing truck 3 PACKAGES DELIVERED')
+print(truck_3)
+print('----------<UNK>----------<UNK>----------<UNK>----------<UNK>----------<UNK>')
+print('total miles:', truck_1.mileage + truck_2.mileage + truck_3.mileage)
