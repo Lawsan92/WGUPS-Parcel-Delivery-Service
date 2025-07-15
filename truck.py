@@ -19,7 +19,7 @@ class Truck:
         id_string = f'id: {self.id}'
         packages_string =  'packages:[\n'
         for package in self.packages:
-            packages_string += f'{{id: {package.delivery_id}, address: {package.delivery_address}, notes: {package.delivery_notes } }}\n'
+            packages_string += f'{{id: {package.delivery_id}, address: {package.delivery_address}, notes: {package.delivery_notes }, deadline: {package.delivery_deadline }}}\n'
         packages_string += ']'
         load_string = f'load: {self.inventory}'
         location_string = f'location: {self.current_stop}'
@@ -31,9 +31,12 @@ class Truck:
 
     def load_truck(self, package):
         if self.inventory < self.capacity:
-            self.packages.append(package)
-            package.delivery_status = 'en route'
-            self.inventory += 1
+            if package.delivery_notes == 'Can only be on truck 2' and self.id != 2:
+                do_nothing = True
+            else:
+                self.packages.append(package)
+                package.delivery_status = 'en route'
+                self.inventory += 1
 
     def update_mileage(self, mileage):
         self.mileage += mileage

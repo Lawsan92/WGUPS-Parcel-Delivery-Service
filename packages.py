@@ -48,10 +48,17 @@ class Packages:
 
     def load_packages(self, truck):
         for index, package in self.packages.items():
-            while package:
-                if package.delivery_status == 'at the hub':
-                    truck.load_truck(package)
-                package = package.next
+            # load group package first
+            if truck.id == 1 and truck.inventory < 4:
+                while package:
+                    if 'Must be delivered with' in package.delivery_notes:
+                        truck.load_truck(package)
+                    package = package.next
+            else:
+                while package:
+                    if package.delivery_status == 'at the hub':
+                        truck.load_truck(package)
+                    package = package.next
 
 
 
