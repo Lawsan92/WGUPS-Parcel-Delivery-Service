@@ -3,6 +3,7 @@ class Packages:
     def __init__(self):
         self.packages = {}
         self.size = 0
+        self.other_than_EOD_packages = 0
 
     def print(self):
         for index, package in self.packages.items():
@@ -18,6 +19,9 @@ class Packages:
     def insert_package(self, package):
         key = package.delivery_id
         index = self._hash(package.delivery_id)
+
+        if package.delivery_deadline != 'EOD':
+            self.other_than_EOD_packages += 1
 
         if index not in self.packages:
             self.packages[index] = package
@@ -45,23 +49,3 @@ class Packages:
                         'status': current.delivery_status}
                 current = current.next
         return 'package not found'
-
-    def load_packages(self, truck):
-        for index, package in self.packages.items():
-            # load group package first
-            if truck.id == 1 and truck.inventory < 4:
-                while package:
-                    if 'Must be delivered with' in package.delivery_notes:
-                        truck.load_truck(package)
-                    package = package.next
-            else:
-                while package:
-                    if package.delivery_status == 'at the hub':
-                        truck.load_truck(package)
-                    package = package.next
-
-
-
-
-
-

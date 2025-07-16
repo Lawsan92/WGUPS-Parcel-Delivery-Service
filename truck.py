@@ -19,7 +19,7 @@ class Truck:
         id_string = f'id: {self.id}'
         packages_string =  'packages:[\n'
         for package in self.packages:
-            packages_string += f'{{id: {package.delivery_id}, address: {package.delivery_address}, notes: {package.delivery_notes }, deadline: {package.delivery_deadline }}}\n'
+            packages_string += f'{{delivery_id: {package.delivery_id}, delivery_address: {package.delivery_address}, delivery_notes: {package.delivery_notes }, delivery_deadline: {package.delivery_deadline }}}\n'
         packages_string += ']'
         load_string = f'load: {self.inventory}'
         location_string = f'location: {self.current_stop}'
@@ -29,14 +29,16 @@ class Truck:
         return_string += f'{id_string} \n{packages_string} \n{load_string} \n{location_string} \n{mileage_string} \n{time_string}'
         return return_string
 
-    def load_truck(self, package):
-        if self.inventory < self.capacity:
-            if package.delivery_notes == 'Can only be on truck 2' and self.id != 2:
-                do_nothing = True
-            else:
-                self.packages.append(package)
-                package.delivery_status = 'en route'
-                self.inventory += 1
+    def load_truck(self, packages):
+        for i, (key, package) in enumerate(packages.items()):
+            while package:
+                if package.delivery_status == 'at the hub':
+                    if self.inventory < self.capacity:
+                        self.packages.append(package)
+                        package.delivery_status = 'en route'
+                        self.inventory += 1
+                package = package.next
+
 
     def update_mileage(self, mileage):
         self.mileage += mileage
@@ -53,7 +55,7 @@ class Truck:
 
         #EDGECASE: if we're at the hub
         if self.current_stop == 'HUB':
-            # default case: assume the package at the beginning of the list has the nearest address
+            # find the nearest stop
             nearest_package = self.nearest_neighbor(distance_hash)
 
             #once we've selected the package with the nearest address: update our next stop
@@ -109,25 +111,3 @@ class Truck:
                 nearest_package['distance'] = current_distance
 
         return nearest_package
-
-    def check_notes(self,package):
-
-        print('Checking truck notes...')
-
-    def late_package(self):
-
-        print('Checking truck late...')
-
-
-    '''
-    def deliver():
-    
-        drop off the package
-            mark the package as delivered
-        if the package is delivered
-            update the package inventory
-            update the time
-            update the mileage
-            plan next route
-    
-    '''

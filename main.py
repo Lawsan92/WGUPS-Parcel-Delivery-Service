@@ -34,13 +34,9 @@ with open('WGUPS Package File_edited.csv') as package_file_csv:
 print(packages)
 
 # load trucks with packages
-
-# load group packages to truck 1
-packages.load_packages(truck_1)
-# load remaining packages on truck 1
-packages.load_packages(truck_1)
-packages.load_packages(truck_2)
-packages.load_packages(truck_3)
+truck_1.load_truck(packages.packages)
+truck_2.load_truck(packages.packages)
+truck_3.load_truck(packages.packages)
 
 # Check truck contents
 print('printing truck 1 AT HUB...')
