@@ -1,3 +1,5 @@
+import datetime
+
 import truck
 import package
 import packages
@@ -8,9 +10,9 @@ import distance_hash
 packages = packages.Packages()
 
 # initialize trucks
-truck_1 = truck.Truck(1)
-truck_2 = truck.Truck(2)
-truck_3 = truck.Truck(3)
+truck_1 = truck.Truck(1, [13,24,25,19], datetime.timedelta(hours=8))
+# truck_2 = truck.Truck(2)
+# truck_3 = truck.Truck(3)
 
 # initialize distance table
 distances = distance_hash.DistanceHash()
@@ -34,37 +36,38 @@ with open('WGUPS Package File_edited.csv') as package_file_csv:
 print(packages)
 
 # load trucks with packages
-truck_1.load_truck(packages.packages)
-truck_2.load_truck(packages.packages)
-truck_3.load_truck(packages.packages)
+# truck_1.load_truck(packages.packages)
 
-# Check truck contents
-print('printing truck 1 AT HUB...')
-print(truck_1)
-print('----------–----------–----------–----------–----------–')
+# truck_2.load_truck(packages.packages)
+# truck_3.load_truck(packages.packages)
 
-print('truck 2 AT HUB...')
-print(truck_2)
-print('----------–----------–----------–----------–----------–')
+# # Check truck contents
+# print('printing truck 1 AT HUB...')
+# print(truck_1)
+# print('----------–----------–----------–----------–----------–')
+#
+# print('truck 2 AT HUB...')
+# print(truck_2)
+# print('----------–----------–----------–----------–----------–')
 
-print('printing truck 3 AT HUB...')
-print(truck_3)
-print('----------–----------–----------–----------–----------–')
+# print('printing truck 3 AT HUB...')
+# print(truck_3)
+# print('----------–----------–----------–----------–----------–')
 
 # deliver packages
 truck_1.deliver_package(distances.hash)
-truck_2.deliver_package(distances.hash)
-truck_3.deliver_package(distances.hash)
+# truck_2.deliver_package(distances.hash)
+# truck_3.deliver_package(distances.hash)
 
 # print truck contents after completing delveries
 print('printing truck 1 PACKAGES DELIVERED...')
 print(truck_1)
 print('----------–----------–----------–----------–----------–')
-
-print('printing truck 1 PACKAGES DELIVERED...')
-print(truck_2)
-
-print('printing truck 3 PACKAGES DELIVERED')
-print(truck_3)
-print('----------<UNK>----------<UNK>----------<UNK>----------<UNK>----------<UNK>')
-print('total miles:', truck_1.mileage + truck_2.mileage + truck_3.mileage)
+#
+# print('printing truck 1 PACKAGES DELIVERED...')
+# print(truck_2)
+#
+# print('printing truck 3 PACKAGES DELIVERED')
+# print(truck_3)
+# print('----------<UNK>----------<UNK>----------<UNK>----------<UNK>----------<UNK>')
+# print('total miles:', truck_1.mileage + truck_2.mileage + truck_3.mileage)

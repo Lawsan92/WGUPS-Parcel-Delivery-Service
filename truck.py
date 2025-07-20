@@ -5,11 +5,11 @@ class Truck:
     speed = 18
     capacity = 16
 
-    def __init__(self, truck_id):
+    def __init__(self, truck_id, package_list, departure_time):
         self.id = truck_id
-        self.packages = []
+        self.packages = package_list
         self.mileage = 0.0
-        self.current_time = datetime.datetime(2025,7,13, 8)
+        self.current_time = departure_time
         self.inventory = 0
         self.current_stop = 'HUB'
         self.previous_stop = None
@@ -30,13 +30,42 @@ class Truck:
         return return_string
 
     def load_truck(self, packages):
+
+        priority_packages_loaded = 0
         for i, (key, package) in enumerate(packages.items()):
             while package:
-                if package.delivery_status == 'at the hub':
-                    if self.inventory < self.capacity:
-                        self.packages.append(package)
-                        package.delivery_status = 'en route'
-                        self.inventory += 1
+                if package.delivery_status == 'at the hub' and self.inventory < self.capacity:
+                    if 'Can only' in package.delivery_notes and self.id != 2:
+                        i += 1
+                        break
+                    if self.id == 1:
+                        if package.delivery_deadline != 'EOD' and priority_packages_loaded <= 7:
+                            self.packages.append(package)
+                            package.delivery_status = 'en route'
+                            self.inventory += 1
+                            priority_packages_loaded += 1
+                        elif "Must be delivered" in package.delivery_notes:
+                            self.packages.append(package)
+                            package.delivery_status = 'en route'
+                            self.inventory += 1
+                        elif priority_packages_loaded >= 7 and package.delivery_deadline == 'EOD':
+                            self.packages.append(package)
+                            package.delivery_status = 'en route'
+                            self.inventory += 1
+                        elif package.delivery_id == 40 and self.inventory < self.capacity:
+                            i = 0
+                    elif self.id == 2:
+                        if package.delivery_deadline != 'EOD' and priority_packages_loaded < 7:
+                            self.packages.append(package)
+                            package.delivery_status = 'en route'
+                            self.inventory += 1
+                            priority_packages_loaded += 1
+                        elif priority_packages_loaded >= 7 and package.delivery_deadline == 'EOD':
+                            self.packages.append(package)
+                            package.delivery_status = 'en route'
+                            self.inventory += 1
+                        elif package.delivery_id == 40 and self.inventory < self.capacity:
+                            i = 0
                 package = package.next
 
 
