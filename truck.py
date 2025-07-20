@@ -35,7 +35,6 @@ class Truck:
         packages_len = len(packages)
         while i < packages_len:
             package = packages[i]
-            print('package:', package)
             i = i + 1
         for package in packages.values():
             if self.inventory < self.capacity:
@@ -88,6 +87,8 @@ class Truck:
                 self.update_mileage(current_distance)
                 # update inventory
                 self.update_inventory(current_package)
+                # update package deliver time
+                current_package.delivery_time = self.current_time
                 # update time
                 self.update_time(math.ceil((current_distance / self.speed) * 60))
                 # print('current stop', self.current_stop, 'previous stop', self.previous_stop, 'current distance',

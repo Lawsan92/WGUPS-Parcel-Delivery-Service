@@ -9,6 +9,7 @@ class Package:
         self.delivery_weight = weight
         self.delivery_notes = notes
         self.delivery_status = status
+        self.delivery_time = None
         self.next = None
 
     def __str__(self):
@@ -21,6 +22,7 @@ class Package:
                 f"delivery_notes: {self.delivery_notes},\n"
                 f"delivery_status: {self.delivery_status},\n"
                 f"delivery_deadline: {self.delivery_deadline},\n"
+                f"delivery_time: {self.delivery_time},\n"
                 f"}}")
 
     def __repr__(self):
@@ -33,4 +35,5 @@ class Package:
                 f"delivery_notes: {self.delivery_notes},\n"
                 f"delivery_status: {self.delivery_status},\n"
                 f"delivery_deadline: {self.delivery_deadline},\n"
+                f"delivery_time: {self.delivery_time},\n"
                 f"}}")

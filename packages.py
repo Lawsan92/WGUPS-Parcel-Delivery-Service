@@ -5,13 +5,14 @@ class Packages:
         self.size = 0
         self.other_than_EOD_packages = 0
 
-    def print(self):
+    def __str__(self):
+        return_string = '[\n'
         for index, package in self.packages.items():
-            print(f"index: {index}, package: {package}")
             while package:
-                print(f"package.next: {package.next}")
+                return_string += f'{{ id: {package.delivery_id},address: {package.delivery_address}, delivery time: {package.delivery_time }, delivery deadline {package.delivery_deadline} }}\n '
                 package = package.next
-        print(f"size: {self.size}")
+        return_string += ']\n'
+        return return_string
 
     def _hash(self, key):
         return int(key) % 10
