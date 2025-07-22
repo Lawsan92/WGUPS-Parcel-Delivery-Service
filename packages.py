@@ -9,7 +9,7 @@ class Packages:
         return_string = '[\n'
         for index, package in self.packages.items():
             while package:
-                return_string += f'{{ id: {package.delivery_id},address: {package.delivery_address}, delivery time: {package.delivery_time }, delivery deadline {package.delivery_deadline} }}\n '
+                return_string += f'{{ id: {package.delivery_id},address: {package.delivery_address}, delivery time: {package.delivery_time }, delivery deadline {package.delivery_deadline}, delivery notes: {package.delivery_notes} }}\n '
                 package = package.next
         return_string += ']\n'
         return return_string

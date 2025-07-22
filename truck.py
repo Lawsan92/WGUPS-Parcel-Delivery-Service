@@ -1,17 +1,22 @@
 import datetime
 import math
 
+import package
+
+
 class Truck:
     speed = 18
     capacity = 16
 
-    def __init__(self, truck_id, package_list, departure_time):
+    def __init__(self, truck_id, package_list, departure_time, priority_packages):
         self.id = truck_id
         self.package_list = package_list
         self.packages = []
+        self.delivered_packages = []
         self.mileage = 0.0
         self.current_time = departure_time
         self.inventory = 0
+        self.priority_packages = priority_packages
         self.current_stop = 'HUB'
         self.previous_stop = None
 
@@ -19,15 +24,23 @@ class Truck:
         return_string = ''
         id_string = f'id: {self.id}'
         packages_string =  'packages:[\n'
-        for package in self.packages:
-            packages_string += f'{{delivery_id: {package.delivery_id}, delivery_address: {package.delivery_address}, delivery_notes: {package.delivery_notes }, delivery_deadline: {package.delivery_deadline }}}\n'
         packages_string += ']'
         load_string = f'load: {self.inventory}'
         location_string = f'location: {self.current_stop}'
         mileage_string = f'mileage: {self.mileage}'
         time_string = f'time: {self.current_time}'
+        priority_package_string = f'priority packages: {self.priority_packages}'
+        if self.current_stop == 'HUB':
+            for package in self.packages:
+                packages_string += f'{{delivery_id: {package.delivery_id}, delivery_address: {package.delivery_address}, delivery_notes: {package.delivery_notes }, delivery_deadline: {package.delivery_deadline }, delivery_time: {package.delivery_time}}}\n'
+        else:
+            try:
+                for package in self.delivered_packages:
+                    packages_string += f'{{delivery_id: {package.delivery_id}, delivery_address: {package.delivery_address}, delivery_notes: {package.delivery_notes}, delivery_deadline: {package.delivery_deadline}, delivery_time: {package.delivery_time}}}\n'
+            except:
+                print('NO DELIVERY')
 
-        return_string += f'{id_string} \n{packages_string} \n{load_string} \n{location_string} \n{mileage_string} \n{time_string}'
+        return_string += f'{id_string} \n{packages_string} \n{load_string} \n{location_string} \n{mileage_string} \n{time_string} \n{priority_package_string} \n\n'
         return return_string
 
     def load_truck(self, packages):
@@ -82,15 +95,21 @@ class Truck:
             if current_package.delivery_address == self.current_stop:
                 # mark package as delivered
                 current_package.delivery_status = 'delivered'
+                # update priority packages
+                if current_package.delivery_deadline != 'EOD':
+                    self.priority_packages -= 1
                 # add mileage
                 current_distance = float(distance_hash[current_package.delivery_address][self.previous_stop])
                 self.update_mileage(current_distance)
-                # update inventory
-                self.update_inventory(current_package)
-                # update package deliver time
-                current_package.delivery_time = self.current_time
                 # update time
                 self.update_time(math.ceil((current_distance / self.speed) * 60))
+                # update package deliver time
+                current_package.delivery_time = self.current_time
+                # add to delivered packages manifest
+                self.delivered_packages.append(current_package)
+                # update inventory
+                self.update_inventory(current_package)
+
                 # print('current stop', self.current_stop, 'previous stop', self.previous_stop, 'current distance',
                 #       current_distance)
                 break
@@ -117,11 +136,19 @@ class Truck:
             'distance': float(distance_hash[self.packages[0].delivery_address][self.current_stop])
             }
 
-        for i in range(1, len(self.packages)):
-            current_package = self.packages[i].delivery_address
-            current_distance = float(distance_hash[current_package][self.current_stop])
-            if nearest_package['distance'] > current_distance > 0:
-                nearest_package['address'] = current_package
-                nearest_package['distance'] = current_distance
+        if self.priority_packages > 0:
+            for i in range(1, len(self.packages)):
+                current_package = self.packages[i].delivery_address
+                current_distance = float(distance_hash[current_package][self.current_stop])
+                if nearest_package['distance'] > current_distance > 0 and self.packages[i].delivery_deadline != 'EOD':
+                    nearest_package['address'] = current_package
+                    nearest_package['distance'] = current_distance
+        else:
+            for i in range(1, len(self.packages)):
+                current_package = self.packages[i].delivery_address
+                current_distance = float(distance_hash[current_package][self.current_stop])
+                if nearest_package['distance'] > current_distance > 0:
+                    nearest_package['address'] = current_package
+                    nearest_package['distance'] = current_distance
 
         return nearest_package
