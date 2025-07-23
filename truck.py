@@ -152,3 +152,8 @@ class Truck:
                     nearest_package['distance'] = current_distance
 
         return nearest_package
+
+    def get_time(self):
+        return self.current_time
+    def set_time(self, time):
+        self.current_time = time
