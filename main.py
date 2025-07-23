@@ -12,6 +12,7 @@ packages = packages.Packages()
 
 # initialize trucks
 truck_1 = truck.Truck(1, [1, 13, 14, 15, 16, 20, 40, 2, 3, 4, 5, 7, 8, 11, 12, 21], datetime.timedelta(hours=8), 7, datetime.timedelta(hours=10))
+# truck_1 = truck.Truck(1, [14, 15, 16], datetime.timedelta(hours=8), 3, datetime.timedelta(hours=8, minutes=10))
 truck_2 = truck.Truck(2, [3, 6, 36, 39, 25, 29, 30, 31, 32,  34, 36, 37, 39, 17, 18, 19, 22, 23, 24  ], datetime.timedelta(hours=9, minutes=5), 7)
 truck_3 = truck.Truck(3,[], truck_1.get_time(), 0)
 
@@ -60,15 +61,15 @@ print('----------–----------–----------–----------–----------–')
 
 # deliver packages
 truck_1.deliver_package(distances.hash)
-truck_2.deliver_package(distances.hash)
-truck_3.set_time(truck_1.get_time())
-truck_3.deliver_package(distances.hash)
+# truck_2.deliver_package(distances.hash)
+# truck_3.set_time(truck_1.get_time())
+# truck_3.deliver_package(distances.hash)
 
-# # print truck contents after completing deliveries
-# print('printing truck 1 PACKAGES DELIVERED...')
-# print(truck_1)
-# print('----------–----------–----------–----------–----------–')
-#
+# print truck contents after completing deliveries
+print('printing truck 1 PACKAGES DELIVERED...')
+print(truck_1)
+print('----------–----------–----------–----------–----------–')
+
 # print('printing truck 1 PACKAGES DELIVERED...')
 # print(truck_2)
 #
@@ -81,27 +82,27 @@ truck_3.deliver_package(distances.hash)
 
 
 
-# user interface
-print('GET TRUCKS DELIVERY STATUSES')
-interface = interface.Interface()
-print('ENTER HOUR: ')
-user_hour = int(input())
-print('ENTER MINUTES: ')
-user_minute = int(input())
-user_time = datetime.timedelta(hours=user_hour, minutes=user_minute)
-interface.get_itinerary_status(user_time, truck_1.delivered_packages, truck_2.delivered_packages, truck_3.delivered_packages)
-
-
-# Check truck contents
-print(f'PRINTING TRUCK STATUSES at {user_hour}:{user_minute}')
-print(f'truck 1 AT {user_hour}:{user_minute}')
-print(truck_1)
-print('----------–----------–----------–----------–----------–')
+# # user interface
+# print('GET TRUCKS DELIVERY STATUSES')
+# interface = interface.Interface()
+# print('ENTER HOUR: ')
+# user_hour = int(input())
+# print('ENTER MINUTES: ')
+# user_minute = int(input())
+# user_time = datetime.timedelta(hours=user_hour, minutes=user_minute)
+# interface.get_itinerary_status(user_time, truck_1.delivered_packages, truck_2.delivered_packages, truck_3.delivered_packages)
 #
-print(f'truck 2 AT {user_hour}:{user_minute}')
-print(truck_2)
-print('----------–----------–----------–----------–----------–')
-
-print(f'printing truck 3 AT {user_hour}:{user_minute}')
-print(truck_3)
-print('----------–----------–----------–----------–----------–')
+#
+# # Check truck contents
+# print(f'PRINTING TRUCK STATUSES at {user_hour}:{user_minute}')
+# print(f'truck 1 AT {user_hour}:{user_minute}')
+# print(truck_1)
+# print('----------–----------–----------–----------–----------–')
+# #
+# print(f'truck 2 AT {user_hour}:{user_minute}')
+# print(truck_2)
+# print('----------–----------–----------–----------–----------–')
+#
+# print(f'printing truck 3 AT {user_hour}:{user_minute}')
+# print(truck_3)
+# print('----------–----------–----------–----------–----------–')

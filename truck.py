@@ -91,14 +91,11 @@ class Truck:
 
         # if we're en route
         for i in range(0, len(self.packages)):
+            if self.current_time >= self.end_time:
+                return
             current_package = self.packages[i]
             # drop off package at current stop
             if current_package.delivery_address == self.current_stop:
-                # mark package as delivered
-                current_package.delivery_status = 'delivered'
-                # update priority packages
-                if current_package.delivery_deadline != 'EOD':
-                    self.priority_packages -= 1
                 # add mileage
                 current_distance = float(distance_hash[current_package.delivery_address][self.previous_stop])
                 self.update_mileage(current_distance)
@@ -106,6 +103,13 @@ class Truck:
                 self.update_time(math.ceil((current_distance / self.speed) * 60))
                 # update package deliver time
                 current_package.delivery_time = self.current_time
+                if self.current_time >= self.end_time:
+                    return
+                # mark package as delivered
+                current_package.delivery_status = 'delivered'
+                # update priority packages
+                if current_package.delivery_deadline != 'EOD':
+                    self.priority_packages -= 1
                 # add to delivered packages manifest
                 self.delivered_packages.append(current_package)
                 # update inventory
@@ -127,6 +131,8 @@ class Truck:
         self.previous_stop = temp
 
         while self.inventory > 1:
+            if self.current_time >= self.end_time:
+                return
             self.deliver_package(distance_hash)
 
 
