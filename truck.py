@@ -8,7 +8,7 @@ class Truck:
     speed = 18
     capacity = 16
 
-    def __init__(self, truck_id, package_list, departure_time, priority_packages):
+    def __init__(self, truck_id, package_list, departure_time, priority_packages, end_time=datetime.timedelta(hours=12, minutes=0)):
         self.id = truck_id
         self.package_list = package_list
         self.packages = []
@@ -19,6 +19,7 @@ class Truck:
         self.priority_packages = priority_packages
         self.current_stop = 'HUB'
         self.previous_stop = None
+        self.end_time = end_time
 
     def __str__(self):
         return_string = ''
