@@ -8,7 +8,7 @@ class Truck:
     speed = 18
     capacity = 16
 
-    def __init__(self, truck_id, package_list, departure_time, priority_packages, end_time=datetime.timedelta(hours=12, minutes=0)):
+    def __init__(self, truck_id, package_list=[], departure_time=datetime.timedelta(hours=8), priority_packages=0, end_time=datetime.timedelta(hours=12, minutes=0)):
         self.id = truck_id
         self.package_list = package_list
         self.packages = []
@@ -121,67 +121,62 @@ class Truck:
         self.current_stop = nearest_package['address']
         self.previous_stop = temp
 
-        while self.current_time < self.end_time and self.priority_packages > 0:
+        while self.current_time < self.end_time and self.inventory > 0:
             self.deliver_package(distance_hash)
 
 
     def nearest_neighbor(self, distance_hash):
         nearest_package = {}
         i = 0
-        while i < len(self.packages):
-            current_package_status = self.packages[i].delivery_status
-            if current_package_status == 'delivered':
-                i = i + 1
-                continue
-            nearest_package = {
-                'address': self.packages[i].delivery_address,
-                'distance': float(distance_hash[self.packages[i].delivery_address][self.current_stop])
-            }
-            if i == len(self.packages) - 1:
-                break
-            j = i + 1
-            while j < len(self.packages):
-                current_package_address = self.packages[j].delivery_address
-                current_package_distance = float(distance_hash[current_package_address][self.current_stop])
-                if current_package_distance < nearest_package['distance'] and self.packages[j].delivery_status == 'en route':
-                    nearest_package['address'] = current_package_address
-                    nearest_package['distance'] = current_package_distance
-                j = j + 1
-            i = len(self.packages)
+
+        # if all priority packages have been delivered
+        if self.priority_packages == 0:
+            while i < len(self.packages):
+                current_package_status = self.packages[i].delivery_status
+                if current_package_status == 'delivered':
+                    i = i + 1
+                    continue
+                nearest_package = {
+                    'address': self.packages[i].delivery_address,
+                    'distance': float(distance_hash[self.packages[i].delivery_address][self.current_stop])
+                }
+                if i == len(self.packages) - 1:
+                    break
+                j = i + 1
+                while j < len(self.packages):
+                    current_package_address = self.packages[j].delivery_address
+                    current_package_distance = float(distance_hash[current_package_address][self.current_stop])
+                    if current_package_distance < nearest_package['distance'] and self.packages[j].delivery_status == 'en route':
+                        nearest_package['address'] = current_package_address
+                        nearest_package['distance'] = current_package_distance
+                    j = j + 1
+                i = len(self.packages)
+        else:
+        # if there are still priority packages left
+            while i < len(self.packages):
+                current_package_status = self.packages[i].delivery_status
+                priority_package = self.packages[i].delivery_deadline != 'EOD'
+                if current_package_status == 'delivered' or not priority_package:
+                    i = i + 1
+                    continue
+                nearest_package = {
+                    'address': self.packages[i].delivery_address,
+                    'distance': float(distance_hash[self.packages[i].delivery_address][self.current_stop])
+                }
+                if i == len(self.packages) - 1:
+                    break
+                j = i + 1
+                while j < len(self.packages):
+                    current_package_address = self.packages[j].delivery_address
+                    current_package_distance = float(distance_hash[current_package_address][self.current_stop])
+                    if current_package_distance < nearest_package['distance'] and self.packages[j].delivery_status == 'en route' and self.packages[j].delivery_deadline != 'EOD':
+                        nearest_package['address'] = current_package_address
+                        nearest_package['distance'] = current_package_distance
+                    j = j + 1
+                i = len(self.packages)
+
         return nearest_package
 
-        # if self.packages[0].delivery_address == self.current_stop:
-        #     nearest_package = {
-        #         'address': self.packages[1].delivery_address,
-        #         'distance': float(distance_hash[self.packages[1].delivery_address][self.current_stop])
-        #     }
-        #     i = 2
-        # else:
-        #     nearest_package = {
-        #         'address': self.packages[0].delivery_address,
-        #         'distance': float(distance_hash[self.packages[0].delivery_address][self.current_stop])
-        #         }
-        #     i = 1
-
-        # # if we still have priority packages on the truck
-        # if self.priority_packages > 0:
-        #     while i > len(self.packages):
-        #         if self.packages[i].delivery_deadline != 'EOD':
-        #             current_address = self.packages[i].delivery_address
-        #             current_distance = float(distance_hash[current_address][self.current_stop])
-        #             if current_distance < nearest_package['distance'] and current_address != self.current_stop:
-        #                 nearest_package['address'] = current_address
-        #                 nearest_package['distance'] = current_distance
-        #         i = i + 1
-        # else:
-        #     while i > len(self.packages):
-        #         current_address = self.packages[i].delivery_address
-        #         current_distance = float(distance_hash[current_address][self.current_stop])
-        #         if current_distance < nearest_package['distance'] and current_address != self.current_stop:
-        #             nearest_package['address'] = current_address
-        #             nearest_package['distance'] = current_distance
-        #         i = i + 1
-        # return nearest_package
 
     def get_time(self):
         return self.current_time
