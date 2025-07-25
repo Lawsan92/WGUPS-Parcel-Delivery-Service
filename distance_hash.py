@@ -1,14 +1,19 @@
 import csv
 from operator import index
 
-
 class DistanceHash:
 
-    def create_hash(self):
+    def __str__(self):
+        return_string = ''
+        for key, value in self.hash.items():
+            return_string += f'{key} -> {value}\n'
+        return_string += f'size: {self.size}'
+        return return_string
 
+    def create_hash(self):
         self.hash = {}
         self.size = 0
-
+        # read distance rows from csv filr
         with open('WGUPS Distance Table_edited.csv', 'r', newline='') as distance_table_csv:
             read_distance_csv = csv.reader(distance_table_csv, delimiter=',')
 
@@ -40,15 +45,9 @@ class DistanceHash:
                     if row[j] != '':
                         self.hash[row_header][header[j-1]] = row[j]
 
-    def __str__(self):
-        return_string = ''
-        for key, value in self.hash.items():
-            return_string += f'{key} -> {value}\n'
-        return_string += f'size: {self.size}'
-        return return_string
 
     def fill_hash(self):
-        # this method fills out the tables - even if there is redundant data
+        # this method fills out the tables - even if there is redundant data to simplify looking up and comparing distances for nearest neighbor algorithm
         for outer_key, outer_bucket in self.hash.items():
             for inner_key, inner_bucket in self.hash.items():
                 if outer_key in inner_bucket and inner_key not in outer_bucket:
@@ -69,7 +68,15 @@ class DistanceHash:
             next_stop['distance'] = float(distance_list[i])
             current_distance = float(distance_list[j])
             current_stop = address_list[j]
+            # if current package address is closer than the 'nearest package'
             if current_distance < next_stop['distance']:
+                # reassign the nearest package
                 next_stop['distance'] = current_distance
                 next_stop['address'] = current_stop
         return next_stop
+
+    def get_distance(self, address):
+        distance_list = list(self.hash[address].values())
+        address_list = list(self.hash[address].keys())
+        for j in range(len(distance_list) - 1):
+            print(address_list[j], distance_list[j])

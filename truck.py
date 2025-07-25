@@ -3,7 +3,6 @@ import math
 
 import package
 
-
 class Truck:
     speed = 18
     capacity = 16
@@ -12,8 +11,6 @@ class Truck:
         self.id = truck_id
         self.package_list = package_list
         self.packages = []
-        self.last_packaged_delivered_ID = None
-        self.delivered_packages = []
         self.mileage = 0.0
         self.current_time = departure_time
         self.inventory = 0
@@ -24,19 +21,27 @@ class Truck:
 
     def __str__(self):
         return_string = ''
-        id_string = f'id: {self.id}'
-        packages_string =  'packages:[\n'
-        packages_string += ']'
+        id_string = f'TRUCK ID: {self.id}\n'
+        packages_string = 'packages:[\n'
         load_string = f'load: {self.inventory}'
         location_string = f'location: {self.current_stop}'
         mileage_string = f'mileage: {self.mileage}'
         time_string = f'time: {self.current_time}'
         priority_package_string = f'priority packages: {self.priority_packages}'
 
-        for package in self.packages:
-            packages_string += f'{{delivery_id: {package.delivery_id}, delivery_address: {package.delivery_address}, delivery_notes: {package.delivery_notes }, delivery_deadline: {package.delivery_deadline }, delivery_time: {package.delivery_time}}}\n'
+        i = 0
+        while i < len(self.packages):
+            package = self.packages[i]
+            if i == len(self.packages) - 1:
+                packages_string += f'{{id: {package.delivery_id}, address: {package.delivery_address}, notes: {package.delivery_notes}, deadline: {package.delivery_deadline}, delivery_time: {package.delivery_time}}}\n'
+            else:
+                packages_string += f'{{id: {package.delivery_id}, address: {package.delivery_address}, notes: {package.delivery_notes}, deadline: {package.delivery_deadline}, delivery_time: {package.delivery_time}}},\n'
+            i = i + 1
+        packages_string += ']\n'
 
-        return_string += f'{id_string} \n{packages_string} \n{load_string} \n{location_string} \n{mileage_string} \n{time_string} \n{priority_package_string} \n\n'
+        return_string += f'{id_string}{packages_string}{load_string}, {location_string}, {mileage_string}, {time_string}, {priority_package_string}\n'
+        return_string += '----------–----------–----------–----------–----------–'
+
         return return_string
 
     def load_truck(self, packages):
@@ -100,8 +105,6 @@ class Truck:
                 # update priority packages
                 if current_package.delivery_deadline != 'EOD':
                     self.priority_packages -= 1
-                # add to delivered packages manifest
-                self.delivered_packages.append(current_package)
                 # update inventory
                 self.update_inventory(current_package)
                 #update last delivered package ID
@@ -123,7 +126,6 @@ class Truck:
 
         while self.current_time < self.end_time and self.inventory > 0:
             self.deliver_package(distance_hash)
-
 
     def nearest_neighbor(self, distance_hash):
         nearest_package = {}
@@ -176,7 +178,6 @@ class Truck:
                 i = len(self.packages)
 
         return nearest_package
-
 
     def get_time(self):
         return self.current_time
