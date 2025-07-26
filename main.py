@@ -55,8 +55,8 @@ elif user_input == '0':
     truck_1.deliver_package(distances.hash)
     truck_2.deliver_package(distances.hash)
     if truck_1.inventory == 0:
-        truck_3.set_time(truck_1.get_time())
-        print(truck_3) # <- updates truck 3's departure time
+        truck_3.set_time(truck_1.get_time()) # <- truck 3 departs after truck 1 completes its delivery
+        print(truck_3)
         truck_3.deliver_package(distances.hash)
 
     # print truck contents after completing deliveries
@@ -67,23 +67,5 @@ elif user_input == '0':
 
     # print total miles
     print('total miles:', truck_1.mileage + truck_2.mileage + truck_3.mileage)
-
-# # user interface
-# print('GET TRUCKS DELIVERY STATUSES')
-# interface = interface.Interface()
-# interface.get_itinerary_status()
-#
-#
-# # Check truck contents
-# print(f'PRINTING TRUCK STATUSES at {user_hour}:{user_minute}')
-# print(f'truck 1 AT {user_hour}:{user_minute}')
-# print(truck_1)
-# print('----------–----------–----------–----------–----------–')
-# #
-# print(f'truck 2 AT {user_hour}:{user_minute}')
-# print(truck_2)
-# print('----------–----------–----------–----------–----------–')
-#
-# print(f'printing truck 3 AT {user_hour}:{user_minute}')
-# print(truck_3)
-# print('----------–----------–----------–----------–----------–')
+else:
+    print('INVALID INPUT')

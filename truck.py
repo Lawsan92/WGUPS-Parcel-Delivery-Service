@@ -65,7 +65,6 @@ class Truck:
                             self.inventory += 1
                     package = package.next
 
-
     def update_mileage(self, mileage):
         self.mileage += mileage
 
@@ -186,5 +185,6 @@ class Truck:
 
     def get_time(self):
         return self.current_time
+
     def set_time(self, time):
         self.current_time = time
