@@ -77,6 +77,11 @@ class Truck:
 
     def deliver_package(self, distance_hash):
 
+        #EDGECASE: user input time is before truck's official departure time
+        if self.end_time <= self.current_time:
+            self.current_time = self.end_time
+            return
+
         #EDGECASE: if we're at the hub
         if self.current_stop == 'HUB':
             # find the nearest stop
