@@ -7,7 +7,7 @@ class Truck:
     speed = 18
     capacity = 16
 
-    def __init__(self, truck_id, package_list=[], departure_time=datetime.timedelta(hours=8), priority_packages=0, end_time=datetime.timedelta(hours=12, minutes=0)):
+    def __init__(self, truck_id, package_list=[], departure_time=datetime.timedelta(hours=8), priority_packages=0, end_time=datetime.timedelta(hours=12, minutes=0), user_time=None):
         self.id = truck_id
         self.package_list = package_list
         self.packages = []
@@ -18,6 +18,7 @@ class Truck:
         self.current_stop = 'HUB'
         self.previous_stop = None
         self.end_time = end_time
+        self.user_time = user_time
 
     def __str__(self):
         return_string = ''
@@ -80,6 +81,9 @@ class Truck:
         if self.end_time <= self.current_time:
             self.current_time = self.end_time
             return
+        if self.user_time and self.user_time <= self.current_time:
+            self.current_time = self.user_time
+            return
 
         #EDGECASE: if we're at the hub
         if self.current_stop == 'HUB':
@@ -99,9 +103,13 @@ class Truck:
             if current_package.delivery_address == self.current_stop and current_package.delivery_status == 'en route':
                 # add mileage
                 current_distance = float(distance_hash[current_package.delivery_address][self.previous_stop])
-                self.update_mileage(current_distance)
                 # update time
                 self.update_time(math.ceil((current_distance / self.speed) * 60))
+                # EDGECASE: user time entered is between deliveries
+                if self.user_time and self.current_time > self.user_time:
+                    self.current_time = self.user_time
+                    return
+                self.update_mileage(current_distance)
                 # update package deliver time
                 current_package.delivery_time = self.current_time
                 # mark package as delivered
@@ -113,8 +121,6 @@ class Truck:
                 self.update_inventory(current_package)
                 #update last delivered package ID
                 self.last_packaged_delivered_ID = current_package.delivery_id
-
-                # print('current stop', self.current_stop, 'previous stop', self.previous_stop, 'current distance',
                 break
 
         # BASE CASE: if we're at our last top
