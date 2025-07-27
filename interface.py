@@ -8,7 +8,7 @@ import distance_hash
 
 class Interface:
 
-    def get_itinerary_status (self, packages):
+    def get_itinerary_status (self, packages, distances):
 
         print('ENTER HOUR: ')
         user_hour = int(input())
@@ -16,35 +16,12 @@ class Interface:
         user_minute = int(input())
         user_time = datetime.timedelta(hours=user_hour, minutes=user_minute)
 
-        # Data structures and initializations are similar to main method for consistency
-
-        # initialize distance table
-        distances = distance_hash.DistanceHash()
-        distances.create_hash()
-
-        # filled distances table from triangular matrix to symmetric table, this will make distance look up easier
-        distances.fill_hash()
-
         truck_1_start = datetime.timedelta(hours=8)
         truck_2_start = datetime.timedelta(hours=9, minutes=5)
 
         truck_1 = truck.Truck(1, [1, 13, 14, 15, 16, 20, 40, 2, 4, 5, 7, 8, 11, 12, 21, 23], truck_1_start, 7, user_time, user_time)
         truck_2 = truck.Truck(2, [3, 6, 36, 39, 25, 29, 30, 31, 32, 34, 37, 17, 18, 19, 38, 28], truck_2_start, 7, user_time, user_time)
         truck_3 = truck.Truck(3, [], user_time, 0, user_time, user_time)
-
-        # Read package data from csv file
-        with open('WGUPS Package File_edited.csv') as package_file_csv:
-            read_package_csv = csv.reader(package_file_csv, delimiter=',')
-
-            # skip file headers
-            next(read_package_csv)
-
-            for row in read_package_csv:
-                # initialize package
-                truck_package = package.Package(int(row[0]), row[1], row[2], row[4], row[5], row[6], row[7],
-                                                'at the hub')
-                # add package to package hash table
-                packages.insert_package(truck_package)
 
         # load trucks with packages
         truck_1.load_truck(packages.packages)

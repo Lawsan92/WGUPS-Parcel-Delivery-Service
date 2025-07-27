@@ -35,7 +35,7 @@ class Packages:
         self.size = self.size + 1
 
     def find_package(self, delivery_id):
-        key = delivery_id
+        key = int(delivery_id)
         index = self._hash(key)
         if index in self.packages:
             current = self.packages[index]
