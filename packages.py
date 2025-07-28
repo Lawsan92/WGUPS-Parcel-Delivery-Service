@@ -41,12 +41,7 @@ class Packages:
             current = self.packages[index]
             while current:
                 if int(current.delivery_id) == key:
-                    return {
-                        'delivery_address': current.delivery_address,
-                        'delivery_city': current.delivery_city,
-                        'delivery_zip': current.delivery_zip,
-                        'delivery_deadline:': current.delivery_deadline,
-                        'weight': current.delivery_weight,
-                        'status': current.delivery_status}
+                    return current
                 current = current.next
+
         return 'package not found'
