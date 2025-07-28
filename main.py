@@ -14,6 +14,7 @@ while loop:
     package_hash = packages.Packages()
 
     # initialize interface
+    user_interface = interface.Interface()
 
     # Read package data from csv file
     with open('WGUPS Package File_edited.csv') as package_file_csv:
@@ -34,7 +35,7 @@ while loop:
 
     # filled distances table from triangular matrix to symmetric table, this will make distance look up easier
     distances.fill_hash()
-    print('PRINT TOTAL MILEAGE (enter: 0):, GO TO INTERFACE (enter: 1), GET PACKAGE STATUS (enter: 2)')
+    print('PRINT TOTAL MILEAGE (enter: 0):, GET TRUCK STATUSES FROM INTERFACE (enter: 1), GET PACKAGE STATUS FROM INTERFACE (enter: 2)')
     user_input = input()
     if user_input == '0':
         # initialize trucks and manually load up default package ids
@@ -69,12 +70,9 @@ while loop:
         # print total miles
         print('total miles:', truck_1.mileage + truck_2.mileage + truck_3.mileage)
     elif user_input == '1':
-        user_interface = interface.Interface()
         user_interface.get_itinerary_status(package_hash, distances)
     elif user_input == '2':
-        print('ENTER PACKAGE ID:')
-        package_id = input()
-        print(package_hash.find_package(package_id))
+        user_interface.get_package_status(package_hash, distances)
     else:
         print('INVALID INPUT')
     print('CONTINUE (yes/no)?')
