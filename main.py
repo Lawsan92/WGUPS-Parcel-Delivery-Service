@@ -7,32 +7,33 @@ import packages
 import distance_hash
 import interface
 
-# initialize packages hash table
-packages = packages.Packages()
-
-# Read package data from csv file
-with open('WGUPS Package File_edited.csv') as package_file_csv:
-    read_package_csv = csv.reader(package_file_csv, delimiter=',')
-
-    # skip file headers
-    next(read_package_csv)
-
-    for row in read_package_csv:
-        # initialize package
-        truck_package = package.Package(int(row[0]), row[1], row[2], row[4], row[5], row[6], row[7], 'at the hub')
-        # add package to package hash table
-        packages.insert_package(truck_package)
-
-# initialize distance table
-distances = distance_hash.DistanceHash()
-distances.create_hash()
-
-# filled distances table from triangular matrix to symmetric table, this will make distance look up easier
-distances.fill_hash()
-
 loop = True
 
 while loop:
+    # initialize packages hash table
+    package_hash = packages.Packages()
+
+    # initialize interface
+
+    # Read package data from csv file
+    with open('WGUPS Package File_edited.csv') as package_file_csv:
+        read_package_csv = csv.reader(package_file_csv, delimiter=',')
+
+        # skip file headers
+        next(read_package_csv)
+
+        for row in read_package_csv:
+            # initialize package
+            truck_package = package.Package(int(row[0]), row[1], row[2], row[4], row[5], row[6], row[7], 'at the hub')
+            # add package to package hash table
+            package_hash.insert_package(truck_package)
+
+    # initialize distance table
+    distances = distance_hash.DistanceHash()
+    distances.create_hash()
+
+    # filled distances table from triangular matrix to symmetric table, this will make distance look up easier
+    distances.fill_hash()
     print('PRINT TOTAL MILEAGE (enter: 0):, GO TO INTERFACE (enter: 1), GET PACKAGE STATUS (enter: 2)')
     user_input = input()
     if user_input == '0':
@@ -42,9 +43,9 @@ while loop:
         truck_3 = truck.Truck(3, [], datetime.timedelta(hours=9, minutes=5))
 
         # load trucks with packages
-        truck_1.load_truck(packages.packages)
-        truck_2.load_truck(packages.packages)
-        truck_3.load_truck(packages.packages)
+        truck_1.load_truck(package_hash.packages)
+        truck_2.load_truck(package_hash.packages)
+        truck_3.load_truck(package_hash.packages)
 
         # PRINT TRUCKS BEFORE DEPARTURE
         print('PRINTING TRUCKS AT DEPARTURE TIME')
@@ -68,12 +69,12 @@ while loop:
         # print total miles
         print('total miles:', truck_1.mileage + truck_2.mileage + truck_3.mileage)
     elif user_input == '1':
-        interface = interface.Interface()
-        interface.get_itinerary_status(packages, distances)
+        user_interface = interface.Interface()
+        user_interface.get_itinerary_status(package_hash, distances)
     elif user_input == '2':
         print('ENTER PACKAGE ID:')
         package_id = input()
-        print(packages.find_package(package_id))
+        print(package_hash.find_package(package_id))
     else:
         print('INVALID INPUT')
     print('CONTINUE (yes/no)?')

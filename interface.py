@@ -1,14 +1,10 @@
 import datetime
-import csv
 
 import truck
-import package
-import distance_hash
-
 
 class Interface:
 
-    def get_itinerary_status (self, packages, distances):
+    def get_itinerary_status (self, package_hash, distances):
 
         print('ENTER HOUR: ')
         user_hour = int(input())
@@ -24,9 +20,9 @@ class Interface:
         truck_3 = truck.Truck(3, [], user_time, 0, user_time, user_time)
 
         # load trucks with packages
-        truck_1.load_truck(packages.packages)
-        truck_2.load_truck(packages.packages)
-        truck_3.load_truck(packages.packages)
+        truck_1.load_truck(package_hash.packages)
+        truck_2.load_truck(package_hash.packages)
+        truck_3.load_truck(package_hash.packages)
 
         # deliver packages
         truck_1.deliver_package(distances.hash)
