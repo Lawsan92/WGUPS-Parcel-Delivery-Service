@@ -6,7 +6,7 @@ class Interface:
 
     def get_itinerary_status (self, package_hash, distances):
 
-        print('ENTER HOUR: ')
+        print('ENTER HOUR (24 hour time):')
         user_hour = int(input())
         print('ENTER MINUTES: ')
         user_minute = int(input())
@@ -44,7 +44,7 @@ class Interface:
         print('ENTER PACKAGE ID:')
         package_id = input()
 
-        print('ENTER HOUR: ')
+        print('ENTER HOUR (24 hour time):')
         user_hour = int(input())
         print('ENTER MINUTES: ')
         user_minute = int(input())
