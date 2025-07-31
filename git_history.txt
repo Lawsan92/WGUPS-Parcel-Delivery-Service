@@ -1,3 +1,6 @@
+6d9a4f5 Debug: package 9 address updating correctly
+0cc3aab Debug: delayed packages now have correct statuses with different user inputs
+35aed9f Debug: moved package 19 to correct truck
 5d9505e Added clarifying comment on time format for user input
 82a0fa6 Added get packaged status method to itinerary class. This allows the dispatcher to grab the status of the package at any given time.
 e9ea236 Refined get package method to print out entire package object

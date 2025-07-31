@@ -92,7 +92,10 @@ class Truck:
     def deliver_package(self, distance_hash, package_hash):
 
         #CONSTRAINTS: Package 9
-        if self.current_time >= datetime.timedelta(hours=10, minutes=20) or self.user_time >= datetime.timedelta(hours=10, minutes=20):
+        if self.user_time:
+            if self.user_time >= datetime.timedelta(hours=10, minutes=20):
+                package_hash.update_package(9, datetime.timedelta(hours=10, minutes=20))
+        if self.current_time >= datetime.timedelta(hours=10, minutes=20):
             package_hash.update_package(9, datetime.timedelta(hours=10, minutes=20))
 
         #EDGECASE: user input time is before truck's official departure time
