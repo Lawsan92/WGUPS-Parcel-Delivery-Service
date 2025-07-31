@@ -55,12 +55,12 @@ while loop:
         print(truck_2)
 
         # deliver packages
-        truck_1.deliver_package(distances.hash)
-        truck_2.deliver_package(distances.hash)
+        truck_1.deliver_package(distances.hash, package_hash)
+        truck_2.deliver_package(distances.hash, package_hash)
         if truck_1.inventory == 0:
             truck_3.set_time(truck_1.get_time()) # <- truck 3 departs after truck 1 completes its delivery
             print(truck_3)
-            truck_3.deliver_package(distances.hash)
+            truck_3.deliver_package(distances.hash, package_hash)
 
         # print truck contents after completing deliveries
         print('PRINTING TRUCKS AFTER COMPLETING DELIVERIES')

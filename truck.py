@@ -89,7 +89,11 @@ class Truck:
     def update_time(self, delivery_time):
         self.current_time += datetime.timedelta(minutes=delivery_time)
 
-    def deliver_package(self, distance_hash):
+    def deliver_package(self, distance_hash, package_hash):
+
+        #CONSTRAINTS: Package 9
+        if self.current_time >= datetime.timedelta(hours=10, minutes=20) or self.user_time >= datetime.timedelta(hours=10, minutes=20):
+            package_hash.update_package(9, datetime.timedelta(hours=10, minutes=20))
 
         #EDGECASE: user input time is before truck's official departure time
         if self.end_time <= self.current_time:
@@ -108,7 +112,7 @@ class Truck:
             self.current_stop = nearest_package['address']
             self.previous_stop = 'HUB'
             # deliver the package at the next stop
-            self.deliver_package(distance_hash)
+            self.deliver_package(distance_hash, package_hash)
 
         # if we're en route
         for i in range(0, len(self.packages)):
@@ -149,7 +153,7 @@ class Truck:
         self.previous_stop = temp
 
         while self.current_time < self.end_time and self.inventory > 0:
-            self.deliver_package(distance_hash)
+            self.deliver_package(distance_hash, package_hash)
 
     def nearest_neighbor(self, distance_hash):
         nearest_package = {}

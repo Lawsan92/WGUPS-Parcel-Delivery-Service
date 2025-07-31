@@ -1,3 +1,5 @@
+import datetime
+
 class Packages:
 
     def __init__(self):
@@ -48,3 +50,20 @@ class Packages:
                 current = current.next
 
         return 'package not found'
+
+    def update_package(self, delivery_id, current_time=datetime.timedelta(minutes=0)):
+        key = int(delivery_id)
+        index = self._hash(key)
+        if index in self.packages:
+            current = self.packages[index]
+            while current:
+                if int(current.delivery_id) == key:
+                    # UPDATE PACKAGE 9:
+                    if int(key) == 9 and current_time >= datetime.timedelta(hours=10, minutes=20):
+                        self.packages[index].delivery_address = '410 S State St'
+                        self.packages[index].delivery_notes = 'address has been updated'
+                        self.packages[index].delivery_zip = '84111'
+                        return current
+                current = current.next
+
+
