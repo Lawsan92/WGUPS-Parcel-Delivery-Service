@@ -39,8 +39,8 @@ while loop:
     user_input = input()
     if user_input == '0':
         # initialize trucks and manually load up default package ids
-        truck_1 = truck.Truck(1, [1, 13, 14, 15, 16, 20, 40, 2, 4, 5, 7, 8, 11, 12, 21, 23], datetime.timedelta(hours=8), 7)
-        truck_2 = truck.Truck(2, [3, 6, 36, 39, 25, 29, 30, 31, 32, 34, 37, 17, 18, 19, 38, 28], datetime.timedelta(hours=9, minutes=5), 7)
+        truck_1 = truck.Truck(1, [1, 2, 4, 5, 7, 8, 11, 12, 13, 14, 15, 16, 19, 20, 21, 40], datetime.timedelta(hours=8), 7)
+        truck_2 = truck.Truck(2, [3, 6, 17, 18, 23, 25, 28, 29, 30, 31, 32, 34, 36, 37, 38, 39], datetime.timedelta(hours=9, minutes=5), 7)
         truck_3 = truck.Truck(3, [], datetime.timedelta(hours=9, minutes=5))
 
         # load trucks with packages
