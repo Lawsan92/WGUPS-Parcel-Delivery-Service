@@ -1,0 +1,38 @@
+5d9505e Added clarifying comment on time format for user input
+82a0fa6 Added get packaged status method to itinerary class. This allows the dispatcher to grab the status of the package at any given time.
+e9ea236 Refined get package method to print out entire package object
+9c4fe0c Renamed class instances to avoid overwriting superclasses
+cd4bd2a Nested interface in while loop to facilitate continuous use
+0743c84 Added package id search option in main py file
+66cc56d Added handler for user input time that's between deliveries
+7955a60 Added handler for invalid user input
+1349fcb Added handler for edgecase where uer time input is earlier than truck departure time
+77d8d8a Interface and main methods split. Interface now prints truck status based on input times
+66c1e64 Cleaned up printing statements to showcase delivery algorithm and remove artifacts
+6f49862 Delivery and nearest neighbor algorithms complete
+a671104 Refactored delivery and nearest neighbor algorithms. Packages are no longer popped from truck, only statuses are updated. Unfinished nearest neighbor, need to account for priority packages
+51187c9 Interface methods to retrieve truck data at timeframes now integrated directly in truck class
+01a82d6 Created crude user interace that returns package and truck statuses based on time input by the user
+45d03ed Truck 3 now departs after truck 1 returns
+ddfa6b4 Added delivered packages attribute in truck class to keep log of delivered packages and their delivery time, all packages meet their deadlines
+6c306a0 Refactored print methods in hash table and added delivery times to packages
+47e90e3 refactored truck loading alogirthm and truck classes to manually load trucks
+2e599fd changing polulation strategy, manually adding packages to trucks using object literals
+ad49747 Refactored load truck method to truck class
+9fc721e Group packages are all in truck 1 and all packages routes for truck 2 are on truck 2
+18e2f96 Nearest neighbor algorithm separated into own method from deliver method in truck class
+1c4c46d Nearest neighbor algorithm working correctly, all packages are being delivered
+1cdedc0 Rudimentary nearest neighbor algorithm created
+d534e57 Filled out distance hash so that all buckets for the current address have the same number of addresses and corresponding distances from the starting address key
+6b3d6a4 merge
+0ff471a distance_hash structure now has identical row and column headers to facilitate address mapping
+eaa760d cleaning up headers in distance hash to match all addresses, in progress...
+859bac1 added method to distance_hash.py to return shortest distance in a list
+46ad82b add method to distance_hash.py to return shortest distance in a list
+a5780fc truck class drop_package method updated to drop off all packages in list in order
+a1820ce truck class has methods for updating th current: time, inventory, and mileage. distance has table keys have been cleaned up to match packaged addresses
+69d25b4 trucks are properly populating
+73c68e6 debugged packages hash table, corrected insert and search methods
+a2070a6 added hash table for packages
+842d895 temporary workaround, loading functions for trucks and packages will remain in file reader file
+1d75f3e first commit

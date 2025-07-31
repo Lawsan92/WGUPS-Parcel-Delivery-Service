@@ -53,10 +53,8 @@ class Interface:
         truck_1_start = datetime.timedelta(hours=8)
         truck_2_start = datetime.timedelta(hours=9, minutes=5)
 
-        truck_1 = truck.Truck(1, [1, 13, 14, 15, 16, 20, 40, 2, 4, 5, 7, 8, 11, 12, 21, 23], truck_1_start, 7,
-                              user_time, user_time)
-        truck_2 = truck.Truck(2, [3, 6, 36, 39, 25, 29, 30, 31, 32, 34, 37, 17, 18, 19, 38, 28], truck_2_start, 7,
-                              user_time, user_time)
+        truck_1 = truck.Truck(1, [1, 2, 4, 5, 7, 8, 11, 12, 13, 14, 15, 16, 19, 20, 21, 40], truck_1_start, 7, user_time, user_time)
+        truck_2 = truck.Truck(2, [3, 6, 17, 18, 23, 25, 28, 29, 30, 31, 32, 34, 36, 37, 38, 39], truck_2_start, 7, user_time, user_time)
         truck_3 = truck.Truck(3, [], user_time, 0, user_time, user_time)
 
         # load trucks with packages

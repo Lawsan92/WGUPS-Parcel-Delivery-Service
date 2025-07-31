@@ -35,6 +35,7 @@ while loop:
 
     # filled distances table from triangular matrix to symmetric table, this will make distance look up easier
     distances.fill_hash()
+
     print('PRINT TOTAL MILEAGE (enter: 0):, GET TRUCK STATUSES FROM INTERFACE (enter: 1), GET PACKAGE STATUS FROM INTERFACE (enter: 2)')
     user_input = input()
     if user_input == '0':

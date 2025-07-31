@@ -9,7 +9,7 @@ class Packages:
         return_string = '[\n'
         for index, package in self.packages.items():
             while package:
-                return_string += f'{{ id: {package.delivery_id},address: {package.delivery_address}, delivery time: {package.delivery_time }, delivery deadline {package.delivery_deadline}, delivery notes: {package.delivery_notes} }}\n '
+                return_string += f'{package}\n '
                 package = package.next
         return_string += ']\n'
         return return_string
@@ -20,6 +20,9 @@ class Packages:
     def insert_package(self, package):
         key = package.delivery_id
         index = self._hash(package.delivery_id)
+
+        if 'Delayed on flight' in package.delivery_notes:
+            package.delivery_status = 'delayed on flight'
 
         if package.delivery_deadline != 'EOD':
             self.other_than_EOD_packages += 1

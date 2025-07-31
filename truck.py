@@ -34,9 +34,9 @@ class Truck:
         while i < len(self.packages):
             package = self.packages[i]
             if i == len(self.packages) - 1:
-                packages_string += f'{{id: {package.delivery_id}, address: {package.delivery_address}, notes: {package.delivery_notes}, deadline: {package.delivery_deadline}, delivery_time: {package.delivery_time}}}\n'
+                packages_string += f'{{id: {package.delivery_id}, address: {package.delivery_address}, notes: {package.delivery_notes}, deadline: {package.delivery_deadline}, delivery_time: {package.delivery_time}, delivery_status: {package.delivery_status}}}\n'
             else:
-                packages_string += f'{{id: {package.delivery_id}, address: {package.delivery_address}, notes: {package.delivery_notes}, deadline: {package.delivery_deadline}, delivery_time: {package.delivery_time}}},\n'
+                packages_string += f'{{id: {package.delivery_id}, address: {package.delivery_address}, notes: {package.delivery_notes}, deadline: {package.delivery_deadline}, delivery_time: {package.delivery_time}, delivery_status: {package.delivery_status}}},\n'
             i = i + 1
         packages_string += ']\n'
 
@@ -55,10 +55,24 @@ class Truck:
             if self.inventory < self.capacity:
                 while package:
                     if self.id != 3:
-                        if package.delivery_id in self.package_list and package.delivery_status == 'at the hub':
-                            package.delivery_status = 'en route'
-                            self.packages.append(package)
-                            self.inventory += 1
+                        if package.delivery_id in self.package_list:
+                            if package.delivery_status == 'at the hub':
+                                package.delivery_status = 'en route'
+                                self.packages.append(package)
+                                self.inventory += 1
+                            if package.delivery_status == 'delayed on flight':
+                                if self.user_time:
+                                    if self.user_time < datetime.timedelta(hours=9, minutes=5):
+                                        self.packages.append(package)
+                                        self.inventory += 1
+                                    else:
+                                        package.delivery_status = 'en route'
+                                        self.packages.append(package)
+                                        self.inventory += 1
+                                else:
+                                    package.delivery_status = 'en route'
+                                    self.packages.append(package)
+                                    self.inventory += 1
                     else:
                         if package.delivery_status == 'at the hub':
                             package.delivery_status = 'en route'
