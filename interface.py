@@ -27,9 +27,15 @@ class Interface:
         # deliver packages
         truck_1.deliver_package(distances.hash, package_hash)
         truck_2.deliver_package(distances.hash, package_hash)
+        # truck 3 will leave when truck 1 has finished its route and the driver returns to the hub
         if truck_1.inventory == 0:
             truck_3.set_time(truck_1.get_time())
         else:
+            '''
+            if truck 1 has not yet completed its route,
+            we'll set the departure time for truck 3 to a time when it can't be any earlier than truck 1's latest completion time, 
+            ensuring that it will update all packages to 'at the hub' when the time entered by the user is earlier than truck 1's end time
+            '''
             truck_3.set_time(datetime.timedelta(hours=12, minutes=00))
         truck_3.deliver_package(distances.hash, package_hash)
 
@@ -67,9 +73,15 @@ class Interface:
         # deliver packages
         truck_1.deliver_package(distances.hash, package_hash)
         truck_2.deliver_package(distances.hash, package_hash)
+        # truck 3 will leave when truck 1 has finished its route and the driver returns to the hub
         if truck_1.inventory == 0:
             truck_3.set_time(truck_1.get_time())
         else:
+            '''
+            if truck 1 has not yet completed its route,
+            we'll set the departure time for truck 3 to a time when it can't be any earlier than truck 1's latest completion time, 
+            ensuring that it will update all packages to 'at the hub' when the time entered by the user is earlier than truck 1's end time
+            '''
             truck_3.set_time(datetime.timedelta(hours=12, minutes=00))
         truck_3.deliver_package(distances.hash, package_hash)
 
