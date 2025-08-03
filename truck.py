@@ -46,11 +46,6 @@ class Truck:
         return return_string
 
     def load_truck(self, packages):
-        i = 0
-        packages_len = len(packages)
-        while i < packages_len:
-            package = packages[i]
-            i = i + 1
         for package in packages.values():
             if self.inventory < self.capacity:
                 while package:
