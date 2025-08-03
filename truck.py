@@ -95,10 +95,11 @@ class Truck:
 
         #EDGECASE: user input time is before truck's official departure time
         if self.end_time <= self.current_time:
+            #reset all packages to being at the hub
+            for package in self.packages:
+                if package.delivery_status != 'delayed on flight':
+                    package.delivery_status = 'at the hub'
             self.current_time = self.end_time
-            return
-        if self.user_time and self.user_time <= self.current_time:
-            self.current_time = self.user_time
             return
 
         #EDGECASE: if we're at the hub
@@ -143,7 +144,7 @@ class Truck:
         if self.current_time > self.end_time or self.inventory == 0:
             return
 
-        #deterine the next stop
+        #determine the next stop
         nearest_package = self.nearest_neighbor(distance_hash)
 
         temp = self.current_stop
