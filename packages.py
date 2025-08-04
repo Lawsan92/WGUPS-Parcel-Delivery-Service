@@ -64,6 +64,13 @@ class Packages:
                         self.packages[index].delivery_notes = 'address has been updated'
                         self.packages[index].delivery_zip = '84111'
                         return current
+
+                    # UPDATE PACKAGES  6, 25, 28, & 32
+                    if int(key) in [6, 25, 28, 32] and current_time >= datetime.timedelta(hours=9, minutes=5):
+                        current.delivery_status = 'at the hub'
+                        current.delivery_notes = 'package has arrived'
+                        return current
+
                 current = current.next
 
 

@@ -12,6 +12,7 @@ class Truck:
         self.package_list = package_list
         self.packages = []
         self.mileage = 0.0
+        self.departure_time = departure_time
         self.current_time = departure_time
         self.inventory = 0
         self.priority_packages = priority_packages
@@ -72,96 +73,104 @@ class Truck:
 
     def deliver_package(self, distance_hash, package_hash):
 
-        # UPDATE PACKAGE STATUSES
+        # if user time is before departure time = make no deliveries
+        if self.user_time:
+            # CONSTRAINTS: Package 9
+            if self.user_time >= datetime.timedelta(hours=10, minutes=20):
+                package_hash.update_package(9, datetime.timedelta(hours=10, minutes=20))
+            if self.user_time >= datetime.timedelta(hours=9, minutes=5):
+            # CONSTRAINTS: Packages 6, 25, 28, & 32 arrive at hub BUT the truck hasn't departed
+                package_hash.update_package(6, datetime.timedelta(hours=9, minutes=6))
+                package_hash.update_package(25, datetime.timedelta(hours=9, minutes=6))
+                package_hash.update_package(28, datetime.timedelta(hours=9, minutes=6))
+                package_hash.update_package(32, datetime.timedelta(hours=9, minutes=6))
+            if self.user_time <= self.departure_time:
+                return
+
+        # UPDATE PACKAGE STATUSES TO EN ROUTE
         if not self.departed:
             self.leaving_hub()
             self.departed = True
 
-        # #CONSTRAINTS: Package 9
-        # if self.user_time:
-        #     if self.user_time >= datetime.timedelta(hours=10, minutes=20):
-        #         package_hash.update_package(9, datetime.timedelta(hours=10, minutes=20))
-        # if self.current_time >= datetime.timedelta(hours=10, minutes=20):
-        #     package_hash.update_package(9, datetime.timedelta(hours=10, minutes=20))
-        #
-        # #EDGECASE: user input time is before truck's official departure time
-        # if self.end_time <= self.current_time:
-        #     #reset all packages to being at the hub
-        #     for package in self.packages:
-        #         if package.delivery_status != 'delayed on flight':
-        #             package.delivery_status = 'at the hub'
-        #     self.current_time = self.end_time
-        #     return
-        #
-        # #EDGECASE: if we're at the hub
-        # if self.current_stop == 'HUB':
-        #     # find the nearest stop
-        #     nearest_package = self.nearest_neighbor(distance_hash)
-        #
-        #     #once we've selected the package with the nearest address:
-        #     self.current_stop = nearest_package['address']
-        #     self.previous_stop = 'HUB'
-        #     # deliver the package at the next stop
-        #     self.deliver_package(distance_hash, package_hash)
-        #
-        # # if we're en route
-        # for i in range(0, len(self.packages)):
-        #     current_package = self.packages[i]
-        #     # drop off package at current stop
-        #     if current_package.delivery_address == self.current_stop and current_package.delivery_status == 'en route':
-        #         # add mileage
-        #         current_distance = float(distance_hash[current_package.delivery_address][self.previous_stop])
-        #         # update time
-        #         self.update_time(math.ceil((current_distance / self.speed) * 60))
-        #         # EDGECASE: user time entered is between deliveries
-        #         if self.user_time and self.current_time > self.user_time:
-        #             self.current_time = self.user_time
-        #             return
-        #         self.update_mileage(current_distance)
-        #         # update package deliver time
-        #         current_package.delivery_time = self.current_time
-        #         # mark package as delivered
-        #         current_package.delivery_status = 'delivered'
-        #         # update priority packages
-        #         if current_package.delivery_deadline != 'EOD':
-        #             self.priority_packages -= 1
-        #         # update inventory
-        #         self.update_inventory(current_package)
-        #         #update last delivered package ID
-        #         self.last_packaged_delivered_ID = current_package.delivery_id
-        #         break
-        #
-        # # BASE CASE: if we're at our last top
-        # if self.current_time > self.end_time or self.inventory == 0:
-        #     return
-        #
-        # #determine the next stop
-        # nearest_package = self.nearest_neighbor(distance_hash)
-        #
-        # temp = self.current_stop
-        # self.current_stop = nearest_package['address']
-        # self.previous_stop = temp
-        #
-        # while self.current_time < self.end_time and self.inventory > 0:
-        #     self.deliver_package(distance_hash, package_hash)
+        # BASE CASE: if we're at our last top OR
+        if self.current_time > self.end_time or self.inventory == 0:
+            return
+
+        # CONSTRAINTS: Package 9
+        if self.current_time >= datetime.timedelta(hours=10, minutes=20):
+            package_hash.update_package(9, datetime.timedelta(hours=10, minutes=20))
+
+        #EDGECASE: if we're at the hub
+        if self.current_stop == 'HUB':
+            # find the nearest stop
+            nearest_package = self.nearest_neighbor(distance_hash)
+
+            #once we've selected the package with the nearest address:
+            self.current_stop = nearest_package['address']
+            self.previous_stop = 'HUB'
+            # deliver the package at the next stop
+            return self.deliver_package(distance_hash, package_hash)
+
+        # if we're en route
+        for package in self.packages:
+            # drop off package at current stop
+            if package.delivery_address == self.current_stop and package.delivery_status == 'en route':
+                # add mileage
+                current_distance = float(distance_hash[package.delivery_address][self.previous_stop])
+                # update time
+                self.update_time(math.ceil((current_distance / self.speed) * 60))
+                # EDGECASE: user time entered is between deliveries
+                if self.user_time and self.current_time > self.user_time:
+                    self.current_time = self.user_time
+                    return
+                self.update_mileage(current_distance)
+                # update package deliver time
+                package.delivery_time = self.current_time
+                # mark the package as delivered
+                package.delivery_status = 'delivered'
+                # update priority packages
+                if package.delivery_deadline != 'EOD':
+                    self.priority_packages -= 1
+                # update inventory
+                self.update_inventory(package)
+                #update last delivered package ID
+                self.last_packaged_delivered_ID = package.delivery_id
+                break
+
+
+        # DETERMINE THE NEXT STOP------------
+        nearest_package = self.nearest_neighbor(distance_hash)
+
+        # if there is no next stop: end the recursion
+        if nearest_package is None:
+            return
+
+        temp = self.current_stop
+        self.current_stop = nearest_package['address']
+        self.previous_stop = temp
+        return self.deliver_package(distance_hash, package_hash)
 
     def nearest_neighbor(self, distance_hash):
-        nearest_package = {}
+        nearest_package = None
         i = 0
 
         # if all priority packages have been delivered
         if self.priority_packages == 0:
             while i < len(self.packages):
                 current_package_status = self.packages[i].delivery_status
+                # iterate through the package list until we reach a package that hasn't been delivered
                 if current_package_status == 'delivered':
                     i = i + 1
                     continue
+                # assign the 'nearest' package once the loop ends
                 nearest_package = {
                     'address': self.packages[i].delivery_address,
                     'distance': float(distance_hash[self.packages[i].delivery_address][self.current_stop])
                 }
+                # loop if we're at the last package in the list: break the
                 if i == len(self.packages) - 1:
                     break
+                # if we're not at the last package of the list: compare the current package to the remaining packages
                 j = i + 1
                 while j < len(self.packages):
                     current_package_address = self.packages[j].delivery_address
@@ -170,7 +179,8 @@ class Truck:
                         nearest_package['address'] = current_package_address
                         nearest_package['distance'] = current_package_distance
                     j = j + 1
-                i = len(self.packages)
+                break # Exit after finding the true nearest package
+        # REPEAT STEPS...
         else:
         # if there are still priority packages left
             while i < len(self.packages):
@@ -193,7 +203,7 @@ class Truck:
                         nearest_package['address'] = current_package_address
                         nearest_package['distance'] = current_package_distance
                     j = j + 1
-                i = len(self.packages)
+                break
 
         return nearest_package
 

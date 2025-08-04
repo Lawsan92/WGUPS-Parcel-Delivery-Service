@@ -54,7 +54,6 @@ while loop:
         print('PRINTING TRUCKS AT DEPARTURE TIME')
         print(truck_1)
         print(truck_2)
-        print(truck_3)
 
         # deliver packages
         truck_1.deliver_package(distances.hash, package_hash)
@@ -68,7 +67,7 @@ while loop:
         print('PRINTING TRUCKS AFTER COMPLETING DELIVERIES')
         print(truck_1)
         print(truck_2)
-        # print(truck_3)
+        print(truck_3)
 
         # print total miles
         print('total miles:', truck_1.mileage + truck_2.mileage + truck_3.mileage)
