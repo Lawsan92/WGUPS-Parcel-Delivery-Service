@@ -10,6 +10,7 @@ class Package:
         self.delivery_notes = notes
         self.delivery_status = status
         self.delivery_time = None
+        self.loaded_on_truck = False
         self.next = None
 
     def __str__(self):

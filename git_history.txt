@@ -1,3 +1,7 @@
+5071df6 REVISION: added clarifying comment
+889bdea Debug: removed additional artifacts from delivery method
+318cec2 Debug: removed artifacts from loading method and rewrote user program loop
+23cc361 Debug: package 9 address updating correctly, fixed minor bug
 6d9a4f5 Debug: package 9 address updating correctly
 0cc3aab Debug: delayed packages now have correct statuses with different user inputs
 35aed9f Debug: moved package 19 to correct truck
