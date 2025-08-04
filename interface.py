@@ -30,6 +30,8 @@ class Interface:
         # truck 3 will leave when truck 1 has finished its route and the driver returns to the hub
         if truck_1.inventory == 0:
             truck_3.set_time(truck_1.get_time())
+            truck_3.set_user_time(datetime.timedelta(hours=17, minutes=0))
+            truck_3.deliver_package(distances.hash, package_hash)
         else:
             '''
             if truck 1 has not yet completed its route,
@@ -37,7 +39,7 @@ class Interface:
             ensuring that it will update all packages to 'at the hub' when the time entered by the user is earlier than truck 1's end time
             '''
             truck_3.set_time(datetime.timedelta(hours=12, minutes=00))
-        truck_3.deliver_package(distances.hash, package_hash)
+            truck_3.deliver_package(distances.hash, package_hash)
 
         # print truck contents after completing deliveries
         print('PRINTING TRUCKS AFTER COMPLETING DELIVERIES')
@@ -76,6 +78,7 @@ class Interface:
         # truck 3 will leave when truck 1 has finished its route and the driver returns to the hub
         if truck_1.inventory == 0:
             truck_3.set_time(truck_1.get_time())
+            truck_3.set_user_time(datetime.timedelta(hours=17, minutes=0))
         else:
             '''
             if truck 1 has not yet completed its route,

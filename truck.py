@@ -21,6 +21,7 @@ class Truck:
         self.end_time = end_time
         self.user_time = user_time
         self.departed = False
+        self.delayed_packages = True
 
     def __str__(self):
         return_string = ''
@@ -78,12 +79,13 @@ class Truck:
             # CONSTRAINTS: Package 9
             if self.user_time >= datetime.timedelta(hours=10, minutes=20):
                 package_hash.update_package(9, datetime.timedelta(hours=10, minutes=20))
-            if self.user_time >= datetime.timedelta(hours=9, minutes=5):
+            if self.user_time >= datetime.timedelta(hours=9, minutes=5) and self.delayed_packages and self.id == 2:
             # CONSTRAINTS: Packages 6, 25, 28, & 32 arrive at hub BUT the truck hasn't departed
                 package_hash.update_package(6, datetime.timedelta(hours=9, minutes=6))
                 package_hash.update_package(25, datetime.timedelta(hours=9, minutes=6))
                 package_hash.update_package(28, datetime.timedelta(hours=9, minutes=6))
                 package_hash.update_package(32, datetime.timedelta(hours=9, minutes=6))
+                self.delayed_packages = False
             if self.user_time <= self.departure_time:
                 return
 
@@ -216,3 +218,9 @@ class Truck:
 
     def set_time(self, time):
         self.current_time = time
+
+    def set_user_time(self, time):
+        self.user_time = time
+
+    def set_end_time(self, time):
+        self.end_time = time
