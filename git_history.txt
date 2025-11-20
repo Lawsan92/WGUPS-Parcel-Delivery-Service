@@ -1,3 +1,6 @@
+7f43352 REVISION: final revision, bug when user input was '1' or '2' has been solved
+4fb71ac REVISION: completed, packages and trucks now have correct statuses
+a215558 starting revisions
 5071df6 REVISION: added clarifying comment
 889bdea Debug: removed additional artifacts from delivery method
 318cec2 Debug: removed artifacts from loading method and rewrote user program loop
