@@ -1,6 +1,7 @@
 # student_name: Lawrence Sanzogni, student_ID: 012143472
 import datetime
 import csv
+import pathlib
 
 import truck
 import package
@@ -14,6 +15,8 @@ def main():
     print('starting WGUPS Delivery program... \n')
     loop = True
 
+    base_path = pathlib.Path(__file__).resolve().parent
+
     while loop:
         # initialize packages hash table
         package_hash = packages.Packages()
@@ -22,7 +25,7 @@ def main():
         user_interface = interface.Interface()
 
         # Read package data from csv file
-        with open('WGUPS Package File_edited.csv') as package_file_csv:
+        with open(base_path/'WGUPS Package File_edited.csv') as package_file_csv:
             read_package_csv = csv.reader(package_file_csv, delimiter=',')
 
             # skip file headers
@@ -41,7 +44,7 @@ def main():
         # filled distances table from triangular matrix to symmetric table, this will make distance look up easier
         distances.fill_hash()
 
-        print('PRINT TOTAL MILEAGE (enter: 0), GET TRUCK STATUSES FROM INTERFACE (enter: 1), GET PACKAGE STATUS FROM INTERFACE (enter: 2), END PROGRAM (enter: 3):')
+        print('PRINT TOTAL MILEAGE (enter: 0)\nGET TRUCK STATUSES FROM INTERFACE (enter: 1)\nGET PACKAGE STATUS FROM INTERFACE (enter: 2)\nEND PROGRAM (enter: 3):')
         user_input = input()
         if user_input == '0':
             # initialize trucks and manually load up default package ids

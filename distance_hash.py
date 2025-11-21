@@ -1,5 +1,7 @@
 import csv
-from operator import index
+import pathlib
+
+base_path = pathlib.Path(__file__).resolve().parent
 
 class DistanceHash:
 
@@ -14,7 +16,7 @@ class DistanceHash:
         self.hash = {}
         self.size = 0
         # read distance rows from csv filr
-        with open('WGUPS Distance Table_edited.csv', 'r', newline='') as distance_table_csv:
+        with open(base_path/'WGUPS Distance Table_edited.csv', 'r', newline='') as distance_table_csv:
             read_distance_csv = csv.reader(distance_table_csv, delimiter=',')
 
             # get file header
