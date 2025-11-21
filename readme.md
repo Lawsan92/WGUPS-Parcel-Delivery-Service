@@ -5,7 +5,7 @@ A delivery service application that predicts the most efficient route using a gr
 
 A user can interact with the application directly through the command line terminal and is given printed prompts. The program starts when given user input and performs different functions depending on the input 
 
-<img src='assets/wgups_1.png' style='width: 400px'/>
+<img src='assets/wgups_main.png' style='width: 400px'/>
 
 ## Demonstration
 
